@@ -2,7 +2,7 @@ import midi_preprocessing
 import os
 
 patterns = {}
-midi_dir = r"C:\Users\Jonny\Downloads\Uni project\midis\vgmusic"
+midi_dir = r"C:\Users\Jonny\Downloads\Uni project\midis\bigbutt"
 all_samples = []
 all_lens = []
 print
