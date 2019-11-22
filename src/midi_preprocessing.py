@@ -6,17 +6,21 @@ number_of_notes = 128
 
 samples_per_tick = 0
 quarter_notes_per_bar = 4
+default_time_signature_numerator = 4
+default_time_signature_denominator = 4
+
 time_signature = 'time_signature'
 note_on = 'note_on'
 note_off = 'note_off'
 
 def midi_to_samples(midi_file_name):
-    mid = MidiFile(midi_file_name)
+    mid = MidiFile(midi_file_name, clip=True)
 
     has_time_signature = False
     has_multiple_time_signatures = False
     ticks_per_beat = mid.ticks_per_beat
     ticks_per_bar = 0
+    new_ticks_per_bar = (ticks_per_beat * default_time_signature_numerator) * (quarter_notes_per_bar / default_time_signature_denominator)
 
     song_ticks_per_bar_change_times = []
     song_ticks_per_bar = []
@@ -48,6 +52,8 @@ def midi_to_samples(midi_file_name):
                         song_ticks_per_bar.append(new_ticks_per_bar)
                         song_ticks_per_bar_change_times.append(msg.time)
 
+        if not has_time_signature:
+            song_ticks_per_bar.append(new_ticks_per_bar)
         if has_multiple_time_signatures:
             print(midi_file_name, ' has multiple time signatures')
 
@@ -91,8 +97,11 @@ def midi_to_samples(midi_file_name):
             bar_notes = np.full((number_of_notes, samples_per_bar), False, dtype=bool)
             track_bars = []
 
-    for bar_index in range(len(song_bar_tracks[0])):
+    if len(song_bar_tracks) <= 1:
+        return song_bar_tracks
+
+    for bar_index in range(min(len(song_bar_tracks[0]), len(song_bar_tracks[1]))):
         joint_bar = song_bar_tracks[0][bar_index] | song_bar_tracks[1][bar_index]
-        song_bars.append(joint_bar)
+        song_bars.append(joint_bar.astype(np.float32))
 
     return song_bars
