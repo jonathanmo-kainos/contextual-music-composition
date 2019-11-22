@@ -1,5 +1,6 @@
 import midi_preprocessing
 import os
+import numpy as np
 
 midi_filepath = r"C:\Users\Jonny\Downloads\Uni project\midis\vgmusic"
 all_samples = []
@@ -16,3 +17,5 @@ for root, subdirs, files in os.walk(midi_filepath):
         except:
             print('ERROR ', path)
             continue
+
+np.save('samples.npy', all_samples)

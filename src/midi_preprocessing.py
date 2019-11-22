@@ -97,11 +97,20 @@ def midi_to_samples(midi_file_name):
             bar_notes = np.full((number_of_notes, samples_per_bar), False, dtype=bool)
             track_bars = []
 
-    if len(song_bar_tracks) <= 1:
-        return song_bar_tracks
+    if len(song_bar_tracks) == 1:
+        if len(song_bar_tracks[0]) > 16:
+            return song_bar_tracks[0][:16]
+        while len(song_bar_tracks[0]) < 16:
+            song_bar_tracks[0].append(song_bar_tracks[0][0])
+        return song_bar_tracks[0]
 
     for bar_index in range(min(len(song_bar_tracks[0]), len(song_bar_tracks[1]))):
         joint_bar = song_bar_tracks[0][bar_index] | song_bar_tracks[1][bar_index]
         song_bars.append(joint_bar.astype(np.float32))
+        if bar_index == 15:
+            break
+
+    while len(song_bars) != 16:
+        song_bars.append(song_bars[0])
 
     return song_bars
