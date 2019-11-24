@@ -1,8 +1,10 @@
-from mido import MidiFile
+from mido import MidiFile, Message, MidiTrack, MetaMessage
 import numpy as np
+import matplotlib.pyplot as plt
 
 samples_per_bar = 96
 number_of_notes = 128
+number_of_bars = 16
 
 samples_per_tick = 0
 quarter_notes_per_bar = 4
@@ -98,9 +100,9 @@ def midi_to_samples(midi_file_name):
             track_bars = []
 
     if len(song_bar_tracks) == 1:
-        if len(song_bar_tracks[0]) > 16:
-            return song_bar_tracks[0][:16]
-        while len(song_bar_tracks[0]) < 16:
+        if len(song_bar_tracks[0]) > number_of_bars:
+            return song_bar_tracks[0][:number_of_bars]
+        while len(song_bar_tracks[0]) < number_of_bars:
             song_bar_tracks[0].append(song_bar_tracks[0][0])
         return song_bar_tracks[0]
 
@@ -110,7 +112,33 @@ def midi_to_samples(midi_file_name):
         if bar_index == 15:
             break
 
-    while len(song_bars) != 16:
+    while len(song_bars) != number_of_bars:
         song_bars.append(song_bars[0])
 
     return song_bars
+
+def samples_to_midi(samples, instrument_number):
+    mid = MidiFile()
+    ticks_per_sample = int(round(((mid.ticks_per_beat * 4) / 96)))
+    track = MidiTrack()
+    track.append(Message('program_change', program=instrument_number, time=0))
+
+    output_midi_array = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
+
+    time_counter = 0
+    previous_time_counter = 0
+    for bar_index in range(number_of_bars):
+        upper_quartile_certainty = np.percentile(samples[0, bar_index, :, :, 0], 99.9)
+        for tick_index in range(samples_per_bar):
+            time_counter += ticks_per_sample
+            for note_index in range(number_of_notes):
+                if samples[0, bar_index, note_index, tick_index, 0] >= upper_quartile_certainty:
+                    delta_time = time_counter - previous_time_counter
+                    output_midi_array[bar_index, note_index, tick_index] = True
+                    track.append(Message(note_on, note=note_index, velocity=127, time=delta_time))
+                    track.append(Message(note_off, note=note_index, velocity=0, time=delta_time))
+                    previous_time_counter = time_counter
+
+    mid.tracks.append(track)
+
+    mid.save(r'..\samples\instrument' + str(instrument_number) + '.mid')
