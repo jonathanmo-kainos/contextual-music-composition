@@ -1,73 +1,75 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from keras.backend.tensorflow_backend import set_session
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Input,Conv2D,MaxPooling2D,UpSampling2D,TimeDistributed,BatchNormalization,ConvLSTM2D,Conv3D
+from tensorflow.keras.models import Sequential,Model
+from tensorflow.keras.layers import Input,TimeDistributed,BatchNormalization,Reshape,Dense,Flatten,Activation,Dropout
 from tensorflow.keras.optimizers import RMSprop
+from tensorflow.keras.utils import plot_model
+
+config = tf.compat.v1.ConfigProto()
+config.gpu_options.allow_growth = True
+config.gpu_options.per_process_gpu_memory_fraction = 0.8
+config.allow_soft_placement = True
+sess = tf.compat.v1.Session(config=config)
+set_session(sess)
 
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
-midi_matrices = np.load('samples.npy')
-print(midi_matrices.shape)
-midi_matrices = np.expand_dims(midi_matrices, axis=4)
-midi_matrix = Input(shape=(128, 96, 1))
-print(midi_matrices.shape)
+dropout_rate = 0.1
+momentum = 0.9
 
-# def autoencoder(midi_matrix):
-seq = Sequential()
-seq.add(ConvLSTM2D(filters=20, kernel_size=(3, 3),
-                   input_shape=(16, 128, 96, 1),
-                   padding='same', return_sequences = True))
-seq.add(BatchNormalization())
+num_bars = 16
+num_notes = 96
+num_time_samples = 96
 
-seq.add(ConvLSTM2D(filters=20, kernel_size=(3, 3),
-                   padding='same', return_sequences = True))
-seq.add(BatchNormalization())
+midi_matrices = np.load('samples bool.npy')
+midi_matrices = midi_matrices.reshape(-1, num_bars, num_notes, num_time_samples)
 
-# seq.add(ConvLSTM2D(filters=20, kernel_size=(3, 3),
-#                    padding='same', return_sequences = True))
-# seq.add(BatchNormalization())
-#
-# seq.add(ConvLSTM2D(filters=20, kernel_size=(3, 3),
-#                    padding='same', return_sequences = True))
-# seq.add(BatchNormalization())
+model = Sequential()
 
-seq.add(Conv3D(filters=1, kernel_size=(3, 3, 3),
-               activation='sigmoid',
-padding ='same', data_format ='channels_last'))
-seq.compile(loss='binary_crossentropy', optimizer ='adadelta')
+# Input is 16 bars of 96 notes over 96 samples
+model.add(Input(shape=midi_matrices[0].shape))
+model.add(Reshape((num_bars, num_notes * num_time_samples)))
 
-seq.fit(midi_matrices, midi_matrices, batch_size=5, epochs=150, validation_split=0.05)
-    # #encoder
-    # #input = 128 x 96 x 1 (wide and thin)
-    # conv1 = Conv2D(32, (6, 6), activation='relu', padding='same')(midi_matrix) #128 x 96 x 32
-    # print(conv1.shape)
-    # pool1 = MaxPooling2D(pool_size=(2, 2))(conv1) #64 x 48 x 64
-    # print(pool1.shape)
-    # pool1 = TimeDistributed(BatchNormalization(momentum=0.9))(pool1)
-    # print(pool1.shape)
-    # conv2 = TimeDistributed(Conv2D(64, (6, 6), activation='relu', padding='same'))(pool1) #64 x 48 x 64
-    # print(conv2.shape)
-    # pool2 = MaxPooling2D(pool_size=(2, 2))(conv2) #32 x 24 x 128
-    # print(pool2.shape)
-    # pool2 = TimeDistributed(BatchNormalization(momentum=0.9))(pool2)
-    # print(pool2.shape)
-    # conv3 = Conv2D(128, (6, 6), activation='relu', padding='same')(pool2) #32 x 24 x 128 (small and thick)
-    # print(conv3.shape)
-    #
-    # #decoder
-    # conv4 = TimeDistributed(Conv2D(128, (6, 6), activation='relu', padding='same'))(conv3) #32 x 24 x 128
-    # up1 = UpSampling2D((2,2))(conv4) # 14 x 14 x 128
-    # up1 = TimeDistributed(BatchNormalization(momentum=0.9))(up1)
-    # conv5 = TimeDistributed(Conv2D(64, (6, 6), activation='relu', padding='same'))(up1) # 64 x 48 x 64
-    # up2 = UpSampling2D((2,2))(conv5) # 28 x 28 x 64
-    # up2 = TimeDistributed(BatchNormalization(momentum=0.9))(up2)
-    # decoded = Conv2D(1, (6, 6), activation='sigmoid', padding='same')(up2) # 28 x 28 x 1
-    # return decoded
+# Convert each bar to a usable vector
+model.add(TimeDistributed(Dense(2000, activation='relu')))
+model.add(TimeDistributed(Dense(200, activation='relu')))
+model.add(Flatten())
 
-# autoencoder = Model(midi_matrix, autoencoder(midi_matrix))
-# autoencoder.compile(loss='mean_squared_error', optimizer=RMSprop())
-# print(autoencoder.summary())
+# Reduce number of nodes to generate key principle components
+model.add(Dense(1600, activation='relu'))
+model.add(Dense(120))
+model.add(BatchNormalization(momentum=momentum, name='encoder1'))
 
-# autoencoder_train = autoencoder.fit(midi_matrices, midi_matrices, batch_size=128, epochs=30, verbose=1, validation_split=0.1)
-seq.save(r"C:\Users\Jonny\Downloads\Uni project\midis\butthole\convlstm2d.h5")
+model.add(Dense(1600, name='encoder2'))
+model.add(BatchNormalization(momentum=momentum))
+model.add(Activation('relu'))
+if dropout_rate > 0:
+    model.add(Dropout(dropout_rate))
+
+# Start decoding back to higher dimensions
+model.add(Dense(num_bars * 200))
+model.add(Reshape((num_bars, 200)))
+model.add(TimeDistributed(BatchNormalization(momentum=momentum)))
+model.add(Activation('relu'))
+if dropout_rate > 0:
+    model.add(Dropout(dropout_rate))
+
+model.add(TimeDistributed(Dense(2000)))
+model.add(TimeDistributed(BatchNormalization(momentum=momentum)))
+model.add(Activation('relu'))
+if dropout_rate > 0:
+    model.add(Dropout(dropout_rate))
+
+# Decode back to 16 bars of 96 notes by 96 time samples
+model.add(TimeDistributed(Dense(num_notes * num_time_samples, activation='sigmoid')))
+model.add(Reshape((num_bars, num_notes, num_time_samples)))
+
+model.compile(optimizer=RMSprop(lr=0.001), loss='binary_crossentropy')
+
+# plot_model(model, to_file='model.png', show_shapes=True)
+print(model.summary())
+
+model.fit(midi_matrices, midi_matrices, batch_size=250, epochs=10, validation_split=0.05)
+model.save(r"C:\Users\Jonny\PycharmProjects\contextual-music-composition\saved models\autoencoder 10 2.h5")
