@@ -3,9 +3,12 @@ import numpy as np
 import midi_preprocessing
 
 midi_matrices = np.load('samples bool.npy')
-midi_matrices = midi_matrices[0].reshape(1, 16, 96, 96)
-model = load_model(r"C:\Users\Jonny\PycharmProjects\contextual-music-composition\saved models\autoencoder 10 2.h5")
+model = load_model(r"C:\Users\Jonny\PycharmProjects\contextual-music-composition\saved models\autoencoder 2000.h5")
 
-samples = model.predict(midi_matrices)
+random_music_seed = 1
+song_name = 'autoencoder 2000 new ' + str(random_music_seed)
 
-midi_preprocessing.samples_to_midi(samples, 0)
+midi_matrix = midi_matrices[random_music_seed].reshape(1, 16, 96, 96)
+samples = model.predict(midi_matrix)
+
+midi_preprocessing.samples_to_midi(samples, 0, song_name)
