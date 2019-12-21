@@ -2,6 +2,7 @@ from mido import MidiFile, Message, MidiTrack
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.cm as cm
+import os
 
 samples_per_bar = 96
 number_of_notes = 96
@@ -16,7 +17,6 @@ time_signature = 'time_signature'
 note_on = 'note_on'
 note_off = 'note_off'
 
-song_name = 'autoencoder 3'
 
 def midi_to_samples(midi_file_name):
     mid = MidiFile(midi_file_name, clip=True)
@@ -25,7 +25,8 @@ def midi_to_samples(midi_file_name):
     has_multiple_time_signatures = False
     ticks_per_beat = mid.ticks_per_beat
     ticks_per_bar = 0
-    new_ticks_per_bar = (ticks_per_beat * default_time_signature_numerator) * (default_beats_per_bar / default_time_signature_denominator)
+    new_ticks_per_bar = (ticks_per_beat * default_time_signature_numerator) * (
+                default_beats_per_bar / default_time_signature_denominator)
 
     song_ticks_per_bar_change_times = []
     song_ticks_per_bar = []
@@ -121,31 +122,38 @@ def midi_to_samples(midi_file_name):
 
     return song_bars
 
-def samples_to_midi(samples, instrument_number):
-    boolean_matrix = samples_to_boolean_matrix(samples)
-    boolean_matrix_to_midi(boolean_matrix, instrument_number)
 
-def samples_to_boolean_matrix(samples):
+def samples_to_midi(samples, instrument_number, song_name):
+    boolean_matrix = samples_to_boolean_matrix(samples, song_name)
+    boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name)
+
+
+def samples_to_boolean_matrix(samples, song_name):
     output_midi_array = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
+    output_midi_array_image = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
+    directory = r'..\outputs\\' + song_name
+    if not os.path.exists(directory):
+        print("Directory doesn't exist. Creating directory " + directory)
+        os.makedirs(directory)
 
     for bar_index in range(number_of_bars):
         upper_quartile_certainty = np.percentile(samples[0, bar_index, :, :], 99.9)
         for tick_index in range(samples_per_bar):
             for note_index in range(number_of_notes):
-                if samples[0, bar_index, note_index, tick_index] >= upper_quartile_certainty:
+                if samples[0, bar_index, note_index, tick_index] > upper_quartile_certainty:
                     output_midi_array[bar_index, note_index, tick_index] = True
+                    output_midi_array_image[bar_index, (number_of_notes - note_index), tick_index] = True
 
-        plt.imsave(r'..\outputs\\' + song_name + r'\\' + str(bar_index) + '.png', output_midi_array[bar_index], cmap=cm.gray)
+        plt.imsave(directory + r'\\' + str(bar_index) + '.png', output_midi_array_image[bar_index], cmap=cm.gray)
 
     return output_midi_array
 
 
-def boolean_matrix_to_midi(boolean_matrix, instrument_number):
+def boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name):
     mid = MidiFile()
     track = MidiTrack()
     track.append(Message('program_change', program=instrument_number, time=0))
 
-    previous_active_sample_index = 0
     ticks_per_sample = int(round(((mid.ticks_per_beat * default_beats_per_bar) / samples_per_bar)))
 
     for bar_index in range(number_of_bars):
@@ -154,12 +162,10 @@ def boolean_matrix_to_midi(boolean_matrix, instrument_number):
             for note_index in range(number_of_notes):
                 if boolean_matrix[bar_index, note_index, sample_index]:
                     delta_time = (sample_index * ticks_per_sample) - (previous_active_sample_index * ticks_per_sample)
-                    track.append(Message(note_on, note=note_index + 16, velocity=120, time=delta_time))
-                    # track.append(Message(note_on, note=note_index + 16, velocity=0, time=12 * ticks_per_sample))
+                    track.append(Message(note_on, note=note_index + 16, velocity=100, time=delta_time))
 
                     previous_active_sample_index = sample_index
 
     mid.tracks.append(track)
 
-    # mid.save(r'..\samples\instrument' + str(instrument_number) + '.mid')
     mid.save(r'..\outputs\\' + song_name + '.mid')
