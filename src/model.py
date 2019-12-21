@@ -6,10 +6,11 @@ from tensorflow.keras.models import Sequential,Model
 from tensorflow.keras.layers import Input,TimeDistributed,BatchNormalization,Reshape,Dense,Flatten,Activation,Dropout
 from tensorflow.keras.optimizers import RMSprop
 from tensorflow.keras.utils import plot_model
+import datetime
 
 config = tf.compat.v1.ConfigProto()
 config.gpu_options.allow_growth = True
-config.gpu_options.per_process_gpu_memory_fraction = 0.8
+config.gpu_options.per_process_gpu_memory_fraction = 0.9
 config.allow_soft_placement = True
 sess = tf.compat.v1.Session(config=config)
 set_session(sess)
@@ -71,5 +72,8 @@ model.compile(optimizer=RMSprop(lr=0.001), loss='binary_crossentropy')
 # plot_model(model, to_file='model.png', show_shapes=True)
 print(model.summary())
 
-model.fit(midi_matrices, midi_matrices, batch_size=250, epochs=10, validation_split=0.05)
-model.save(r"C:\Users\Jonny\PycharmProjects\contextual-music-composition\saved models\autoencoder 10 2.h5")
+log_directory = "..\logs\\" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_directory, histogram_freq=1)
+
+model.fit(midi_matrices, midi_matrices, batch_size=400, epochs=2000, validation_split=0.05, callbacks=[tensorboard_callback])
+model.save(r"C:\Users\Jonny\PycharmProjects\contextual-music-composition\saved models\autoencoder 2000.h5")
