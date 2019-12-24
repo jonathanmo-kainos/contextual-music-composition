@@ -42,12 +42,12 @@ def midi_to_samples(midi_file_name):
     song_ticks_per_bar_index = 0
 
     print(midi_file_name)
+    # Determine time signature(s) for midi file to ensure sample parsing is completed correctly
     for i, track in enumerate(mid.tracks):
         for msg in track:
             if msg.is_meta:
                 if msg.type == time_signature:
                     new_ticks_per_bar = (ticks_per_beat * msg.numerator) * (default_beats_per_bar / msg.denominator)
-                    print(msg.numerator, '/', msg.denominator, ' ', msg.time)
                     if has_time_signature and new_ticks_per_bar != ticks_per_bar:
                         has_multiple_time_signatures = True
                         song_ticks_per_bar.append(new_ticks_per_bar)
@@ -65,23 +65,28 @@ def midi_to_samples(midi_file_name):
 
     for i, track in enumerate(mid.tracks):
         for msg in track:
-
+            # Determine when to change the time signature for sample parsing in the song
             if has_multiple_time_signatures and change_ticks_per_bar and len(song_ticks_per_bar_change_times) > 1:
                 song_ticks_per_bar_index += 1
                 ticks_until_ticks_per_bar_change = song_ticks_per_bar_change_times[0]
                 del song_ticks_per_bar_change_times[0]
                 break
 
+            # If a note is played or silenced, add it
             if not msg.is_meta:
                 delta_time_in_samples = msg.time * (samples_per_bar / song_ticks_per_bar[song_ticks_per_bar_index])
+
                 if not msg.type == note_on:
                     sample_position_of_note_in_bar += int(delta_time_in_samples)
                     continue
+
+                # Create a new empty 2d boolean array to represent a bar
                 if delta_time_in_samples >= samples_per_bar - sample_position_of_note_in_bar:
                     track_bars.append(bar_notes)
                     bar_notes = np.full((number_of_notes, samples_per_bar), False, dtype=bool)
                     delta_time_in_samples -= (samples_per_bar - sample_position_of_note_in_bar)
                     sample_position_of_note_in_bar = 0
+
                     while delta_time_in_samples >= samples_per_bar:
                         delta_time_in_samples -= samples_per_bar
                         if type(ticks_until_ticks_per_bar_change) is int:
@@ -91,6 +96,8 @@ def midi_to_samples(midi_file_name):
                                 break
                     if change_ticks_per_bar:
                         continue
+
+                # Add a true value to the boolean array at the time a note is played against the pitch of the note
                 sample_position_of_note_in_bar += int(delta_time_in_samples)
                 if 16 < msg.note < 96:
                     bar_notes[msg.note][sample_position_of_note_in_bar] = True
@@ -98,15 +105,18 @@ def midi_to_samples(midi_file_name):
                         change_ticks_per_bar = True
                         continue
 
+        # Most MIDI files have 2 tracks (usually one for left hand one for right hand), so we need to analyse all tracks
         if len(track_bars) > 0:
             song_bar_tracks.append(track_bars)
             sample_position_of_note_in_bar = 0
             bar_notes = np.full((number_of_notes, samples_per_bar), False, dtype=bool)
             track_bars = []
 
+    # Return 16 bars of song to keep the learning uniform.
     if len(song_bar_tracks) == 1:
         if len(song_bar_tracks[0]) > number_of_bars:
             return song_bar_tracks[0][:number_of_bars]
+        # If the song is shorter than 16 bars, add the first bar to the end until it has 16 bars, then return it
         while len(song_bar_tracks[0]) < number_of_bars:
             song_bar_tracks[0].append(song_bar_tracks[0][0])
         return song_bar_tracks[0]
