@@ -133,12 +133,12 @@ def midi_to_samples(midi_file_name):
     return song_bars
 
 
-def samples_to_midi(samples, instrument_number, song_name):
-    boolean_matrix = samples_to_boolean_matrix(samples, song_name)
+def samples_to_midi(samples, instrument_number, song_name, certainty_for_note_to_be_played):
+    boolean_matrix = samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_played)
     boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name)
 
 
-def samples_to_boolean_matrix(samples, song_name):
+def samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_played):
     output_midi_array = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
     output_midi_array_image = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
     directory = r'..\outputs\\' + song_name
@@ -147,7 +147,7 @@ def samples_to_boolean_matrix(samples, song_name):
         os.makedirs(directory)
 
     for bar_index in range(number_of_bars):
-        upper_quartile_certainty = np.percentile(samples[0, bar_index, :, :], 99.9)
+        upper_quartile_certainty = np.percentile(samples[0, bar_index, :, :], certainty_for_note_to_be_played)
         for tick_index in range(samples_per_bar):
             for note_index in range(number_of_notes):
                 if samples[0, bar_index, note_index, tick_index] > upper_quartile_certainty:
