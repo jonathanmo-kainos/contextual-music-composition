@@ -178,4 +178,4 @@ def boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name):
 
     mid.tracks.append(track)
 
-    mid.save(r'..\outputs\\' + song_name + '.mid')
+    mid.save(r'..\outputs\\' + song_name + '\\' + song_name + '.mid')
