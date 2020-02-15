@@ -2,10 +2,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from keras.backend.tensorflow_backend import set_session
 import tensorflow as tf
-from tensorflow.keras.models import Sequential,Model
-from tensorflow.keras.layers import Input,TimeDistributed,BatchNormalization,Reshape,Dense,Flatten,Activation,Dropout
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Input, TimeDistributed, BatchNormalization, Reshape, Dense, Flatten, Activation, \
+    Dropout
+from tensorflow.keras.losses import binary_crossentropy
 from tensorflow.keras.optimizers import RMSprop
 from tensorflow.keras.utils import plot_model
+from tensorflow.keras import backend
 import datetime
 
 config = tf.compat.v1.ConfigProto()
@@ -75,5 +78,6 @@ print(model.summary())
 log_directory = "..\logs\\" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_directory, histogram_freq=1)
 
-model.fit(midi_matrices, midi_matrices, batch_size=400, epochs=2000, validation_split=0.05, callbacks=[tensorboard_callback])
+model.fit(midi_matrices, midi_matrices, batch_size=400, epochs=2000, validation_split=0.05,
+          callbacks=[tensorboard_callback])
 model.save(r"C:\Users\Jonny\PycharmProjects\contextual-music-composition\saved models\autoencoder 2000.h5")
