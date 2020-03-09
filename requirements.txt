@@ -1,2 +1,3 @@
 django
+Gunicorn
 django-heroku
