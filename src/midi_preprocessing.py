@@ -152,7 +152,7 @@ def samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_playe
             for note_index in range(number_of_notes):
                 if samples[0, bar_index, note_index, tick_index] > upper_quartile_certainty:
                     output_midi_array[bar_index, note_index, tick_index] = True
-                    output_midi_array_image[bar_index, (number_of_notes - note_index), tick_index] = True
+                    output_midi_array_image[bar_index, ((number_of_notes - 1) - note_index), tick_index] = True
 
         plt.imsave(directory + r'\\' + str(bar_index) + '.png', output_midi_array_image[bar_index], cmap=cm.gray)
 
@@ -166,15 +166,18 @@ def boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name):
 
     ticks_per_sample = int(round(((mid.ticks_per_beat * default_beats_per_bar) / samples_per_bar)))
 
+    previous_bar_index = 0
     for bar_index in range(number_of_bars):
         previous_active_sample_index = 0
         for sample_index in range(samples_per_bar):
             for note_index in range(number_of_notes):
                 if boolean_matrix[bar_index, note_index, sample_index]:
-                    delta_time = (sample_index * ticks_per_sample) - (previous_active_sample_index * ticks_per_sample)
+                    delta_time = (((sample_index + (samples_per_bar * bar_index)) -
+                                   (previous_active_sample_index + (samples_per_bar * previous_bar_index))) * ticks_per_sample)
                     track.append(Message(note_on, note=note_index + 16, velocity=100, time=delta_time))
 
                     previous_active_sample_index = sample_index
+                    previous_bar_index = bar_index
 
     mid.tracks.append(track)
 
