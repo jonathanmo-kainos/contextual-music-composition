@@ -1,6 +1,8 @@
 import requests
+import numpy as np
 from pprint import pprint
 import json
+import enums
 
 with open('../azure-config.json') as config_file:
     azure_config = json.load(config_file)
@@ -40,3 +42,10 @@ def detect_language_of_user_input_text(user_input_text):
     pprint(languages)
 
     return languages['documents'][0]['detectedLanguages'][0]['iso6391Name']
+
+
+def get_sample_type_based_on_user_input(user_input_text):
+    if is_sentiment_negative(user_input_text):
+        return 'minor'
+    else:
+        return 'major'

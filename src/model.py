@@ -9,6 +9,8 @@ import enums
 
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
+epochs = 1500
+
 dropout_rate = 0.1
 momentum = 0.9
 
@@ -67,6 +69,7 @@ log_directory = "..\logs\\" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_directory, histogram_freq=1)
 
 # Train model and save trained model
-model.fit(midi_matrices, midi_matrices, batch_size=100, epochs=40, validation_split=0.05,
+model.fit(midi_matrices, midi_matrices, batch_size=100, epochs=epochs, validation_split=0.05,
           callbacks=[tensorboard_callback])
-model.save(r"C:\Users\Jonny\PycharmProjects\contextual-music-composition\saved models\autoencoder 40.h5")
+model.save('../saved models/autoencoder ' + str(epochs) + '.h5')
+model.save_weights('../saved models/autoencoder ' + str(epochs) + ' weights.h5')
