@@ -1,23 +1,27 @@
 from tensorflow.compat.v1.keras.models import load_model
+import input_validator
 import midi_preprocessing
 import enums
 import utils
 import sentiment_analysis
 
-decoder = load_model(enums.DECODER_2000_FILEPATH)
 
-certainty_for_note_to_be_played = 99.9
-user_input_text = 'joyful'
-instrument_number = 0
+def generate_song(user_input_text, instrument_number, note_certainty, note_speed):
+    decoder = load_model(enums.DECODER_2000_FILEPATH)
 
-# sample_type = sentiment_analysis.get_sample_type_based_on_user_input(user_input_text)
-sample_type = 'major'
+    user_input = input_validator.validate_user_input(instrument_number, note_certainty, note_speed)
 
-random_input = utils.convert_pca_components_to_random_decoder_input(sample_type)
+    if user_input.text is not '':
+        sample_type = sentiment_analysis.get_sample_type_based_on_user_input(user_input_text)
+    else:
+        sample_type = 'all'
 
-print('Random music seed: ' + str(random_input))
-song_name = 'autoencoder 2000 ' + str(random_input[0]) + ' ' + user_input_text + ' ' + str(instrument_number)
+    random_input = utils.convert_pca_components_to_random_decoder_input(sample_type)
 
-samples = decoder.predict(random_input.reshape(-1, 120))
-midi_preprocessing.samples_to_midi(samples, instrument_number, song_name, certainty_for_note_to_be_played)
+    if enums.DEBUG_MODE:
+        print('Random music seed: ' + str(random_input))
+    song_name = 'autoencoder 2000 ' + str(random_input[0]) + ' ' + user_input_text + ' ' + str(instrument_number)
+
+    samples = decoder.predict(random_input.reshape(-1, 120))
+    return midi_preprocessing.samples_to_midi(samples, instrument_number, song_name, note_certainty)
 

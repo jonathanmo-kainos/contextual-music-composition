@@ -6,9 +6,11 @@ import logging
 
 midi_filepath = r"C:\Users\Jonny\Downloads\Uni project\midis"
 # midi_filepath = r"C:\Users\Jonny\PycharmProjects\contextual-music-composition\src"
+
 all_samples = []
 major_samples = []
 minor_samples = []
+
 print('Loading midis')
 for root, subdirs, files in os.walk(midi_filepath):
     for file in files:

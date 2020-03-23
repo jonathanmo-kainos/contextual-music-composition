@@ -1,3 +1,9 @@
+# DEBUG MODE ENABLED
+DEBUG_MODE = False
+
+# LIVE SONG OUTPUTS DIRECTORY
+LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH = '../outputs/live/'
+
 # MODELS
 AUTOENCODER_300_FILEPATH = '../saved models/test models/autoencoder 300.h5'
 AUTOENCODER_2000_FILEPATH = '../saved models/autoencoder 2000.h5'
