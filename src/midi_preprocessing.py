@@ -2,6 +2,7 @@ from mido import MidiFile, Message, MidiTrack
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.cm as cm
+import enums
 import os
 
 samples_per_bar = 96
@@ -135,16 +136,19 @@ def midi_to_samples(midi_file_name):
 
 def samples_to_midi(samples, instrument_number, song_name, certainty_for_note_to_be_played):
     boolean_matrix = samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_played)
-    boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name)
+    return boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name)
 
 
 def samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_played):
     output_midi_array = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
     output_midi_array_image = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
-    directory = r'..\outputs\\' + song_name
-    if not os.path.exists(directory):
-        print("Directory doesn't exist. Creating directory " + directory)
-        os.makedirs(directory)
+    if enums.DEBUG_MODE:
+        output_directory = '../outputs/' + song_name
+    else:
+        output_directory = enums.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH
+    if not os.path.exists(output_directory):
+        print("Directory doesn't exist. Creating directory " + output_directory)
+        os.makedirs(output_directory)
 
     for bar_index in range(number_of_bars):
         upper_quartile_certainty = np.percentile(samples[0, bar_index, :, :], certainty_for_note_to_be_played)
@@ -153,8 +157,7 @@ def samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_playe
                 if samples[0, bar_index, note_index, tick_index] > upper_quartile_certainty:
                     output_midi_array[bar_index, note_index, tick_index] = True
                     output_midi_array_image[bar_index, ((number_of_notes - 1) - note_index), tick_index] = True
-
-        plt.imsave(directory + r'\\' + str(bar_index) + '.png', output_midi_array_image[bar_index], cmap=cm.gray)
+        plt.imsave(output_directory + '/' + str(bar_index) + '.png', output_midi_array_image[bar_index], cmap=cm.gray)
 
     return output_midi_array
 
@@ -181,4 +184,7 @@ def boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name):
 
     mid.tracks.append(track)
 
-    mid.save(r'..\outputs\\' + song_name + '\\' + song_name + '.mid')
+    if enums.DEBUG_MODE:
+        mid.save('../outputs//' + song_name + '/' + song_name + '.mid')
+    else:
+        mid.save(enums.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')

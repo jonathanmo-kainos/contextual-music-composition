@@ -70,10 +70,12 @@ def convert_pca_components_to_random_decoder_input(name):
     for i in range(20):
         bottom_limit = np.percentile(pca.transform(encoded_samples), 5, axis=0)[i]
         top_limit = np.percentile(pca.transform(encoded_samples), 95, axis=0)[i]
-        print('bottom limit: ' + str(bottom_limit) + ' top limit: ' + str(top_limit))
+        if enums.DEBUG_MODE:
+            print('bottom limit: ' + str(bottom_limit) + ' top limit: ' + str(top_limit))
         random_input.append(uniform(bottom_limit, top_limit))
-    print('pca mean: ')
-    print(pca.mean_)
+    if enums.DEBUG_MODE:
+        print('pca mean: ')
+        print(pca.mean_)
     return pca.inverse_transform(random_input)
 
 
