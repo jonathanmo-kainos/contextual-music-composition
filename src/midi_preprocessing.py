@@ -136,7 +136,7 @@ def midi_to_samples(midi_file_name):
 
 def samples_to_midi(samples, instrument_number, song_name, certainty_for_note_to_be_played):
     boolean_matrix = samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_played)
-    return boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name)
+    boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name)
 
 
 def samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_played):

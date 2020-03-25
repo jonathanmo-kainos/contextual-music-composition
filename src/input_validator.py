@@ -23,12 +23,12 @@ def validate_instrument_number(instrument_number):
 
 
 def validate_note_certainty(note_certainty):
-    if not note_certainty:
+    if not note_certainty or note_certainty < 98 or note_certainty > 100:
         note_certainty = 99.9
     return note_certainty
 
 
 def validate_note_speed(note_speed):
-    if not note_speed:
+    if not note_speed or note_speed > 5 or note_speed < 0.2:
         note_speed = 1
     return note_speed

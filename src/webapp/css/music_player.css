@@ -115,24 +115,6 @@ body {
   padding: 0 2%;
 }
 
-.main-btn_wrapper {
-  position: absolute;
-  right: -25%;
-  top: calc(50% - 18px);
-  width: 36px;
-  height: 36px;
-  background-color: #fff9e1;
-  border-radius: 50%;
-  text-align: center;
-  display: none;
-  opacity: 0;
-  transform: scale(0);
-  transform-origin: bottom;
-}
-.main-btn_wrapper .main-btn {
-  line-height: 36px;
-}
-
 .header {
   position: fixed;
   left: 2.2vw;
@@ -716,4 +698,27 @@ body {
 
 .shadow {
   box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.4);
+}
+
+.form-group {
+  min-width: 600px;
+  width: 50%;
+  text-align: center;
+  margin-bottom: 30vh;
+}
+
+.generate-music-button {
+  font-size: 2em;
+  margin: 2vh;
+}
+
+#user-input {
+  min-height: 50px;
+  font-size: 2em;
+  height: 6vh;
+  text-align: center;
+}
+
+#describe-music {
+  font-size: 1em;
 }
