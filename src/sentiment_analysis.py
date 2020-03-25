@@ -1,10 +1,9 @@
 import requests
-import numpy as np
 from pprint import pprint
 import json
 import enums
 
-with open('../azure-config.json') as config_file:
+with open(enums.AZURE_CONFIG_DIRECTORY_FILEPATH) as config_file:
     azure_config = json.load(config_file)
 subscription_key = azure_config['subscription_key']
 endpoint = azure_config['endpoint']

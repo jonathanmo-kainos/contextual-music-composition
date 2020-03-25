@@ -1,15 +1,15 @@
 from flask import Flask, jsonify, request, send_file, send_from_directory
-from flask_cors import CORS
+# from flask_cors import CORS
 import model_output
 import enums
 
 app = Flask(__name__,
             static_url_path='',
-            static_folder='webapp')
-CORS(app)
+            static_folder='./')
+# CORS(app)
 
 
-@app.route("/song/", methods=['GET'])
+@app.route("/getMusic/", methods=['GET'])
 def return_song():
     user_input_text = request.args.get('user_input_text')
     instrument_number = request.args.get('instrument_number')
@@ -22,7 +22,7 @@ def return_song():
 
 @app.route("/", methods=['GET'])
 def default():
-    return send_from_directory('./webapp/html/', 'music_player.html')
+    return send_from_directory('./html/', 'music_player.html')
 
 
 if __name__ == "__main__":

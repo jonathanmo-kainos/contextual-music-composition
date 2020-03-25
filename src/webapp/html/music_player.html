@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Generate music</title>
-  <link rel="stylesheet" type="text/css" href="../css/music_player.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="../css/music_player.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
+  <script type='text/javascript' src='https://kitchwww.github.io/midi/midi.js'></script>
 </head>
 <body>
   <div class="wrapper">
@@ -16,10 +18,13 @@
       <div class="wave -two"></div>
       <div class="wave -three"></div>
     </div>
-    <div class="line"></div>
     <div class="text-wrap">
-      <div class="text"><span>L</span><span>I</span><span>S</span><span>T</span><span>E</span><span>N</span>
-        <div class="main-btn_wrapper"><i class="main-btn fa fa-play" aria-hidden="true"></i></div>
+      <div class="form-group">
+        <input type="text" class="form-control" id="user-input" aria-describedby="describe-music" placeholder="Describe the music you'd like to generate in a few words">
+        <small id="describe-music" class="form-text text-muted">(Or leave it blank if you just want a random tune)</small>
+        <div class="main-btn_wrapper">
+          <button type="button" class="btn btn-primary generate-music-button main-btn">Generate music!</button>
+        </div>
       </div>
     </div>
     <div class="header">
@@ -143,65 +148,19 @@
       </div>
     </div>
     <div class="page" id="curator">
-      <div class="curator_title_wrapper"><span>LP</span>
-        <div class="curator_line"></div>
-        <div class="curator_title">Listeners</div>
-        <div class="curator_line"></div><span>14</span>
-      </div>
-      <div class="curator_list">
-        <div class="curator_list_content">
-          <div class="connect_btn_wrapper item">
-            <div class="connect_btn">
-              <div class="connect_btn_text">Connect<br/>SoundCloud</div>
-            </div>
-          </div>
-          <div class="curator_list_content_desc">Or Select<br/>a Listener of<br/>L.P.</div>
-          <div class="item">
-            <div class="thumb"></div>
-            <div class="info">
-              <div class="name">Fantasy</div>
-              <div class="desc">Sam</div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="thumb"></div>
-            <div class="info">
-              <div class="name">Fantasy</div>
-              <div class="desc">Sam</div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="thumb"></div>
-            <div class="info">
-              <div class="name">Fantasy</div>
-              <div class="desc">Sam</div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="thumb"></div>
-            <div class="info">
-              <div class="name">Fantasy</div>
-              <div class="desc">Sam</div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="thumb"></div>
-            <div class="info">
-              <div class="name">Fantasy</div>
-              <div class="desc">Sam</div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="thumb"></div>
-            <div class="info">
-              <div class="name">Fantasy</div>
-              <div class="desc">Sam</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <h2>Sound Information</h2>
+      <div id="length">Duration:</div>
+      <div id="source">Source:</div>
+      <div id="status" style="color:red;">Status: Loading</div>
+      <h2>Control Buttons</h2>
+      <button id="play">Play</button>
+      <button id="pause">Pause</button>
+      <button id="restart">Restart</button>
+      <h2>Playing Information</h2>
+      <div id="currentTime">0</div>
     </div>
   </div>
+  <script src="../js/animation_controller.js" charset="utf-8"></script>
   <script src="../js/music_player_controller.js" charset="utf-8"></script>
 </body>
 </html>
