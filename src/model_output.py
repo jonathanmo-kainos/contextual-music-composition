@@ -7,15 +7,15 @@ import sentiment_analysis
 
 
 def generate_song(user_input_text, instrument_number, note_certainty, note_speed):
-    decoder = load_model(enums.DECODER_2000_FILEPATH)
+    decoder = load_model(enums.EnvVars.DECODER_2000_FILEPATH)
 
     user_input = input_validator.validate_user_input(user_input_text, instrument_number, note_certainty, note_speed)
 
     if user_input.text is not '':
-        sample_type = 'all'
+        sample_type = 'minor'
         # sample_type = sentiment_analysis.get_sample_type_based_on_user_input(user_input_text)
     else:
-        sample_type = 'all'
+        sample_type = 'minor'
 
     random_input = utils.convert_pca_components_to_random_decoder_input(sample_type)
 
@@ -25,5 +25,8 @@ def generate_song(user_input_text, instrument_number, note_certainty, note_speed
 
     samples = decoder.predict(random_input.reshape(-1, 120))
     midi_preprocessing.samples_to_midi(samples, instrument_number, song_name, note_certainty)
+
+
+generate_song('', 0, 99.9, 1)
 
 

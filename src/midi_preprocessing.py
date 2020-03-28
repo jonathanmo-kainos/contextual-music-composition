@@ -145,7 +145,7 @@ def samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_playe
     if enums.DEBUG_MODE:
         output_directory = '../outputs/' + song_name
     else:
-        output_directory = enums.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH
+        output_directory = enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH
     if not os.path.exists(output_directory):
         print("Directory doesn't exist. Creating directory " + output_directory)
         os.makedirs(output_directory)
@@ -170,8 +170,8 @@ def boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name):
     ticks_per_sample = int(round(((mid.ticks_per_beat * default_beats_per_bar) / samples_per_bar)))
 
     previous_bar_index = 0
+    previous_active_sample_index = 0
     for bar_index in range(number_of_bars):
-        previous_active_sample_index = 0
         for sample_index in range(samples_per_bar):
             for note_index in range(number_of_notes):
                 if boolean_matrix[bar_index, note_index, sample_index]:
@@ -187,4 +187,4 @@ def boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name):
     if enums.DEBUG_MODE:
         mid.save('../outputs//' + song_name + '/' + song_name + '.mid')
     else:
-        mid.save(enums.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
+        mid.save(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
