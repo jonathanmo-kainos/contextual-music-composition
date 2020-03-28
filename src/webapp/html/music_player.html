@@ -9,6 +9,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
   <script type='text/javascript' src='https://kitchwww.github.io/midi/midi.js'></script>
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 </head>
 <body>
   <div class="wrapper">
@@ -19,147 +20,268 @@
       <div class="wave -three"></div>
     </div>
     <div class="text-wrap">
-      <div class="form-group">
-        <input type="text" class="form-control" id="user-input" aria-describedby="describe-music" placeholder="Describe the music you'd like to generate in a few words">
+      <div class="text-input-group">
+        <input type="text" id="user-input" aria-describedby="describe-music" placeholder="Describe the music you'd like to generate in a few words">
         <small id="describe-music" class="form-text text-muted">(Or leave it blank if you just want a random tune)</small>
         <div class="main-btn_wrapper">
-          <button type="button" class="btn btn-primary generate-music-button main-btn">Generate music!</button>
+          <button type="button" onclick="generateRandomMusic()" class="btn btn-primary generate-music-button main-btn">Generate music!</button>
         </div>
       </div>
-    </div>
-    <div class="header">
-      <div class="burger-wrapper">
-        <div class="burger"></div>
-      </div>
-      <div class="logo-text">Listeners Playlist</div>
-      <div class="back_btn">
-        <div class="circle"></div>
-        <div class="text">Back</div>
-      </div>
-    </div>
-    <div class="nav">
-      <ul class="nav_main">
-        <li> <a class="nav_link">Home</a></li>
-        <li> <a class="nav_link">Listeners</a></li>
-        <li> <a class="nav_link">Compilations</a></li>
-        <li> <a class="nav_link">LP. Mix</a></li>
-      </ul>
-      <div class="nav_divider"></div>
-      <ul class="nav_sub">
-        <li><a class="nav_link" href="">About</a></li>
-        <li><a class="nav_link" href="">Contact</a></li>
-      </ul>
-    </div>
-    <div class="mini-player">
-      <div class="track_info_wrapper">
-        <div class="track_info">
-          <div class="thumb"></div>
-          <div class="info">
-            <div class="title">Friday Comes</div>
-            <div class="artist">Early</div>
+      <div class="controls">
+        <div class="slider-controls">
+          <input type="range" min="1" max="100" value="50" class="slider" id="slider-1">
+          <input type="range" min="1" max="100" value="50" class="slider" id="slider-2">
+          <input type="range" min="1" max="100" value="50" class="slider" id="slider-3">
+          <input type="range" min="1" max="100" value="50" class="slider" id="slider-4">
+          <input type="range" min="1" max="100" value="50" class="slider" id="slider-5">
+          <input type="range" min="1" max="100" value="50" class="slider" id="slider-6">
+          <input type="range" min="1" max="100" value="50" class="slider" id="slider-7">
+          <input type="range" min="1" max="100" value="50" class="slider" id="slider-8">
+          <input type="range" min="1" max="100" value="50" class="slider" id="slider-9">
+          <input type="range" min="1" max="100" value="50" class="slider" id="slider-10">
+        </div>
+        <div class="music-player"></div>
+        <div class="config-controls">
+          <div class="config-option">
+            <label class="left config-toggle-label">Sheet music</label>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="toggle round"></span>
+            </label>
+            <label class="right config-toggle-label">Note position</label>
+          </div>
+          <div class="config-option">
+            <label class="left config-toggle-label">Major</label>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="toggle round"></span>
+            </label>
+            <label class="right config-toggle-label">Minor</label>
+          </div>
+          <div class="config-option">
+            <label class="left config-toggle-label">Note density</label>
+            <input type="range" min="98" max="100" value="99" step="0.01" class="slider density" id="note-density-slider">
+          </div>
+          <div class="config-option">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle config-toggle-label" data-toggle="dropdown">Instrument <b class="caret"></b></a>
+              <ul class="dropdown-menu mega-menu">
+                <li class="mega-menu-column">
+                  <ul>
+                    <li class="nav-header">Piano</li>
+                    <li><a href="#">Acoustic Grand Piano</a></li>
+                    <li><a href="#">Bright Acoustic Piano</a></li>
+                    <li><a href="#">Electric Grand Piano</a></li>
+                    <li><a href="#">Honky-tonk Piano</a></li>
+                    <li><a href="#">Electric Piano 1</a></li>
+                    <li><a href="#">Electric Piano 2</a></li>
+                    <li><a href="#">Harpsichord</a></li>
+                    <li><a href="#">Clavinet</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Chromatic Percussion</li>
+                    <li><a href="#">Celesta</a></li>
+                    <li><a href="#">Glockenspiel</a></li>
+                    <li><a href="#">Music Box</a></li>
+                    <li><a href="#">Vibraphone</a></li>
+                    <li><a href="#">Marimba</a></li>
+                    <li><a href="#">Xylophone</a></li>
+                    <li><a href="#">Tubular Bells</a></li>
+                    <li><a href="#">Dulcimer</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Organ</li>
+                    <li><a href="#">Drawbar Organ</a></li>
+                    <li><a href="#">Percussive Organ</a></li>
+                    <li><a href="#">Rock Organ</a></li>
+                    <li><a href="#">Church Organ</a></li>
+                    <li><a href="#">Reed Organ</a></li>
+                    <li><a href="#">Accordion</a></li>
+                    <li><a href="#">Harmonica</a></li>
+                    <li><a href="#">Tango Accordion</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Guitar</li>
+                    <li><a href="#">Acoustic Guitar (nylon)</a></li>
+                    <li><a href="#">Acoustic Guitar (steel)</a></li>
+                    <li><a href="#">Electric Guitar (jazz)</a></li>
+                    <li><a href="#">Electric Guitar (clean)</a></li>
+                    <li><a href="#">Electric Guitar (muted)</a></li>
+                    <li><a href="#">Overdriven Guitar</a></li>
+                    <li><a href="#">Distortion Guitar</a></li>
+                    <li><a href="#">Guitar harmonics</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Bass</li>
+                    <li><a href="#">Acoustic Bass</a></li>
+                    <li><a href="#">Electric Bass (finger)</a></li>
+                    <li><a href="#">Electric Bass (pick)</a></li>
+                    <li><a href="#">Fretless Bass</a></li>
+                    <li><a href="#">Slap Bass 1</a></li>
+                    <li><a href="#">Slap Bass 2</a></li>
+                    <li><a href="#">Synth Bass 1</a></li>
+                    <li><a href="#">Synth Bass 2</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Strings</li>
+                    <li><a href="#">Violin</a></li>
+                    <li><a href="#">Viola</a></li>
+                    <li><a href="#">Cello</a></li>
+                    <li><a href="#">Contrabass</a></li>
+                    <li><a href="#">Tremolo Strings</a></li>
+                    <li><a href="#">Pizzicato Strings</a></li>
+                    <li><a href="#">Orchestral Harp</a></li>
+                    <li><a href="#">Timpani</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">More Strings!</li>
+                    <li><a href="#">String Ensemble 1</a></li>
+                    <li><a href="#">String Ensemble 2</a></li>
+                    <li><a href="#">Synth Strings 1</a></li>
+                    <li><a href="#">Synth Strings 2</a></li>
+                    <li><a href="#">Choir Aahs</a></li>
+                    <li><a href="#">Voice Oohs</a></li>
+                    <li><a href="#">Synth Voice</a></li>
+                    <li><a href="#">Orchestra Hit</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Brass</li>
+                    <li><a href="#">Trumpet</a></li>
+                    <li><a href="#">Trombone</a></li>
+                    <li><a href="#">Tuba</a></li>
+                    <li><a href="#">Muted Trumpet</a></li>
+                    <li><a href="#">French Horn</a></li>
+                    <li><a href="#">Brass Section</a></li>
+                    <li><a href="#">Synth Brass 1</a></li>
+                    <li><a href="#">Synth Brass 2</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Reed</li>
+                    <li><a href="#">Soprano Sax</a></li>
+                    <li><a href="#">Alto Sax</a></li>
+                    <li><a href="#">Tenor Sax</a></li>
+                    <li><a href="#">Baritone Sax</a></li>
+                    <li><a href="#">Oboe</a></li>
+                    <li><a href="#">English Horn</a></li>
+                    <li><a href="#">Bassoon</a></li>
+                    <li><a href="#">Clarinet</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Pipe</li>
+                    <li><a href="#">Piccolo</a></li>
+                    <li><a href="#">Flute</a></li>
+                    <li><a href="#">Recorder</a></li>
+                    <li><a href="#">Pan Flute</a></li>
+                    <li><a href="#">Blown Bottle</a></li>
+                    <li><a href="#">Shakuhachi</a></li>
+                    <li><a href="#">Whistle</a></li>
+                    <li><a href="#">Ocarina</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Synth Lead</li>
+                    <li><a href="#">Lead 1 (square)</a></li>
+                    <li><a href="#">Lead 2 (sawtooth)</a></li>
+                    <li><a href="#">Lead 3 (calliope)</a></li>
+                    <li><a href="#">Lead 4 (chiff)</a></li>
+                    <li><a href="#">Lead 5 (charang)</a></li>
+                    <li><a href="#">Lead 6 (voice)</a></li>
+                    <li><a href="#">Lead 7 (fifths)</a></li>
+                    <li><a href="#">Lead 8 (bass + lead)</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Synth Pad</li>
+                    <li><a href="#">Pad 1 (new age)</a></li>
+                    <li><a href="#">Pad 2 (warm)</a></li>
+                    <li><a href="#">Pad 3 (polysynth)</a></li>
+                    <li><a href="#">Pad 4 (choir)</a></li>
+                    <li><a href="#">Pad 5 (bowed)</a></li>
+                    <li><a href="#">Pad 6 (metallic)</a></li>
+                    <li><a href="#">Pad 7 (halo)</a></li>
+                    <li><a href="#">Pad 8 (sweep)</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Synth Effects</li>
+                    <li><a href="#">FX 1 (rain)</a></li>
+                    <li><a href="#">FX 2 (soundtrack)</a></li>
+                    <li><a href="#">FX 3 (crystal)</a></li>
+                    <li><a href="#">FX 4 (atmosphere)</a></li>
+                    <li><a href="#">FX 5 (brightness)</a></li>
+                    <li><a href="#">FX 6 (goblins)</a></li>
+                    <li><a href="#">FX 7 (echoes)</a></li>
+                    <li><a href="#">FX 8 (sci-fi)</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Ethnic</li>
+                    <li><a href="#">Sitar</a></li>
+                    <li><a href="#">Banjo</a></li>
+                    <li><a href="#">Shamisen</a></li>
+                    <li><a href="#">Koto</a></li>
+                    <li><a href="#">Kalimba</a></li>
+                    <li><a href="#">Bag pipe</a></li>
+                    <li><a href="#">Fiddle</a></li>
+                    <li><a href="#">Shanai</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Percussive</li>
+                    <li><a href="#">Tinkle Bell</a></li>
+                    <li><a href="#">Agogo</a></li>
+                    <li><a href="#">Steel Drums</a></li>
+                    <li><a href="#">Woodblock</a></li>
+                    <li><a href="#">Taiko Drum</a></li>
+                    <li><a href="#">Melodic Tom</a></li>
+                    <li><a href="#">Synth Drum</a></li>
+                    <li><a href="#">Reverse Cymbal</a></li>
+                  </ul>
+                </li>
+                <li class="mega-menu-column">
+                  <ul>
+                  <li class="nav-header">Sound effects</li>
+                    <li><a href="#">Guitar Fret Noise</a></li>
+                    <li><a href="#">Breath Noise</a></li>
+                    <li><a href="#">Seashore</a></li>
+                    <li><a href="#">Bird Tweet</a></li>
+                    <li><a href="#">Telephone Ring</a></li>
+                    <li><a href="#">Helicopter</a></li>
+                    <li><a href="#">Applause</a></li>
+                    <li><a href="#">Gunshot</a></li>
+                  </ul>
+                </li>
+              </ul><!-- dropdown-menu -->
+            </li><!-- /.dropdown -->
           </div>
         </div>
       </div>
-      <div class="mini-player_btn_wrapper"><i class="btn-prev fa fa-step-backward" aria-hidden="true"></i>
-        <div class="btn-switch"><i class="btn-play fa fa-play" aria-hidden="true"></i><i class="btn-pause fa fa-pause" aria-hidden="true"></i></div><i class="btn-next fa fa-step-forward" aria-hidden="true"></i><i class="btn-open-player fa fa-list" id="player" aria-hidden="true"></i>
-      </div>
-    </div>
-    <div class="dim"></div>
-    <div class="player">
-      <div class="playback_wrapper">
-        <div class="playback_blur"></div>
-        <div class="playback_thumb"></div>
-        <div class="playback_info">
-          <div class="title">Friday Comes</div>
-          <div class="artist">Early</div>
-        </div>
-        <div class="playback_btn_wrapper"><i class="btn-prev fa fa-step-backward" aria-hidden="true"></i>
-          <div class="btn-switch"><i class="btn-play fa fa-play" aria-hidden="true"></i><i class="btn-pause fa fa-pause" aria-hidden="true"></i></div><i class="btn-next fa fa-step-forward" aria-hidden="true"></i>
-        </div>
-        <div class="playback_timeline">
-          <div class="playback_timeline_start-time">00:31</div>
-          <div class="playback_timeline_slider">
-            <div class="slider_base"></div>
-            <div class="slider_progress"></div>
-            <div class="slider_handle"></div>
-          </div>
-          <div class="playback_timeline_end-time">03:11</div>
-        </div>
-      </div>
-      <div class="list_wrapper">
-        <ul class="list">
-          <li class="list_item selected">
-            <div class="thumb"> </div>
-            <div class="info">
-              <div class="title">Friday Comes</div>
-              <div class="artist">Early</div>
-            </div>
-          </li>
-          <li class="list_item">
-            <div class="thumb"> </div>
-            <div class="info">
-              <div class="title">Friday Comes</div>
-              <div class="artist">Early</div>
-            </div>
-          </li>
-          <li class="list_item">
-            <div class="thumb"> </div>
-            <div class="info">
-              <div class="title">Friday Comes</div>
-              <div class="artist">Early</div>
-            </div>
-          </li>
-          <li class="list_item">
-            <div class="thumb"> </div>
-            <div class="info">
-              <div class="title">Friday Comes</div>
-              <div class="artist">Early</div>
-            </div>
-          </li>
-          <li class="list_item">
-            <div class="thumb"> </div>
-            <div class="info">
-              <div class="title">Friday Comes</div>
-              <div class="artist">Early</div>
-            </div>
-          </li>
-          <li class="list_item">
-            <div class="thumb"> </div>
-            <div class="info">
-              <div class="title">Friday Comes</div>
-              <div class="artist">Early</div>
-            </div>
-          </li>
-          <li class="list_item">
-            <div class="thumb"> </div>
-            <div class="info">
-              <div class="title">Friday Comes</div>
-              <div class="artist">Early</div>
-            </div>
-          </li>
-          <li class="list_item">
-            <div class="thumb"> </div>
-            <div class="info">
-              <div class="title">Friday Comes</div>
-              <div class="artist">Early</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="page" id="curator">
-      <h2>Sound Information</h2>
-      <div id="length">Duration:</div>
-      <div id="source">Source:</div>
-      <div id="status" style="color:red;">Status: Loading</div>
-      <h2>Control Buttons</h2>
-      <button id="play">Play</button>
-      <button id="pause">Pause</button>
-      <button id="restart">Restart</button>
-      <h2>Playing Information</h2>
-      <div id="currentTime">0</div>
     </div>
   </div>
+
   <script src="../js/animation_controller.js" charset="utf-8"></script>
   <script src="../js/music_player_controller.js" charset="utf-8"></script>
 </body>

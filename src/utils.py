@@ -9,6 +9,7 @@ import enums
 ALL = 'all'
 MAJOR = 'major'
 MINOR = 'minor'
+NUM_PCA_COMPONENTS = 50
 
 
 def split_autoencoder_trained_model_into_encoder_and_decoder_models(model):
@@ -22,8 +23,8 @@ def create_encoder_model_from_trained_autoencoder(model):
         encoder_model.add(layer)
 
     print(encoder_model.summary())
-    encoder_model.load_weights(enums.AUTOENCODER_2000_WEIGHTS_FILEPATH, by_name=True)
-    encoder_model.save(enums.ENCODER_2000_FILEPATH)
+    encoder_model.load_weights(enums.EnvVars.AUTOENCODER_2000_WEIGHTS_FILEPATH, by_name=True)
+    encoder_model.save(enums.EnvVars.ENCODER_2000_FILEPATH)
 
 
 def create_decoder_model_from_trained_autoencoder(model):
@@ -33,12 +34,12 @@ def create_decoder_model_from_trained_autoencoder(model):
         decoder_model.add(layer)
 
     print(decoder_model.summary())
-    decoder_model.load_weights(enums.AUTOENCODER_2000_WEIGHTS_FILEPATH, by_name=True)
-    decoder_model.save(enums.DECODER_2000_FILEPATH)
+    decoder_model.load_weights(enums.EnvVars.AUTOENCODER_2000_WEIGHTS_FILEPATH, by_name=True)
+    decoder_model.save(enums.EnvVars.DECODER_2000_FILEPATH)
 
 
 def generate_and_save_samples_encoded(samples, name):
-    encoder_model = load_model(enums.ENCODER_2000_FILEPATH)
+    encoder_model = load_model(enums.EnvVars.ENCODER_2000_FILEPATH)
     encoded_samples = []
 
     print('encoding ' + name + ' samples')
@@ -53,21 +54,12 @@ def generate_and_save_samples_encoded(samples, name):
     np.save(enums.get_encoded_samples_filepath(name), encoded_samples)
 
 
-def save_pca_components_of_samples(name):
-    pca = get_pca(np.load(enums.get_encoded_samples_filepath(name)))
-    print('Performing PCA on ' + name + ' samples')
-    print(pca.explained_variance_ratio_)
-    print(pca.singular_values_)
-    np.save(enums.get_pca_component_variance_filepath(name), pca.explained_variance_ratio_)
-    np.save(enums.get_pca_component_values_filepath(name), pca.singular_values_)
-
-
 def convert_pca_components_to_random_decoder_input(name):
     pca = get_pca(np.load(enums.get_encoded_samples_filepath(name)))
     encoded_samples = np.load(enums.get_encoded_samples_filepath(name))
 
     random_input = []
-    for i in range(20):
+    for i in range(NUM_PCA_COMPONENTS):
         bottom_limit = np.percentile(pca.transform(encoded_samples), 5, axis=0)[i]
         top_limit = np.percentile(pca.transform(encoded_samples), 95, axis=0)[i]
         if enums.DEBUG_MODE:
@@ -80,7 +72,7 @@ def convert_pca_components_to_random_decoder_input(name):
 
 
 def get_pca(samples):
-    pca = PCA(n_components=20)
+    pca = PCA(n_components=NUM_PCA_COMPONENTS)
     pca.fit(samples)
     return pca
 
@@ -88,8 +80,6 @@ def get_pca(samples):
 # model = load_model(enums.AUTOENCODER_2000_FILEPATH)
 # split_autoencoder_trained_model_into_encoder_and_decoder_models(model)
 
-# generate_and_save_samples_encoded(np.load('../samples/test samples/scom.npy'), 'soop')
-# save_pca_components_of_samples('soop')
 # generate_and_save_samples_encoded(np.load(enums.MAJOR_SAMPLES_FILEPATH), MAJOR)
 # generate_and_save_samples_encoded(np.load(enums.MINOR_SAMPLES_FILEPATH), MINOR)
 #

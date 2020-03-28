@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Input, TimeDistributed, BatchNormalization, 
     Dropout
 from tensorflow.keras.optimizers import RMSprop
 import datetime
-import enums
+import enums.EnvVars
 
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
@@ -18,7 +18,7 @@ num_bars = 16
 num_notes = 96
 num_time_samples = 96
 
-midi_matrices = np.load(enums.ALL_SAMPLES_FILEPATH)
+midi_matrices = np.load(enums.EnvVars.ALL_SAMPLES_FILEPATH)
 midi_matrices = midi_matrices.reshape(-1, num_bars, num_notes, num_time_samples)
 
 model = Sequential()
