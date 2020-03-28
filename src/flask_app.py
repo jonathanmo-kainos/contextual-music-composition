@@ -9,7 +9,7 @@ app = Flask(__name__,
 # CORS(app)
 
 
-@app.route("/getMusic/", methods=['GET'])
+@app.route("/generate", methods=['GET'])
 def return_song():
     user_input_text = request.args.get('user_input_text')
     instrument_number = request.args.get('instrument_number')
@@ -17,12 +17,12 @@ def return_song():
     note_speed = request.args.get('note_speed')
 
     model_output.generate_song(user_input_text, instrument_number, note_certainty, note_speed)
-    return send_file(enums.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
+    return send_file(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
 
 
 @app.route("/", methods=['GET'])
 def default():
-    return send_from_directory('./html/', 'music_player.html')
+    return send_from_directory('./src/webapp/html/', 'music_player.html')
 
 
 if __name__ == "__main__":
