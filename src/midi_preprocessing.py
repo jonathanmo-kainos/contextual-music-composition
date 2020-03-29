@@ -142,7 +142,7 @@ def samples_to_midi(samples, instrument_number, song_name, certainty_for_note_to
 def samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_played):
     output_midi_array = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
     output_midi_array_image = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
-    if enums.DEBUG_MODE:
+    if enums.EnvVars.DEBUG_MODE:
         output_directory = '../outputs/' + song_name
     else:
         output_directory = enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH
@@ -184,7 +184,7 @@ def boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name):
 
     mid.tracks.append(track)
 
-    if enums.DEBUG_MODE:
+    if enums.EnvVars.DEBUG_MODE:
         mid.save('../outputs//' + song_name + '/' + song_name + '.mid')
     else:
         mid.save(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
