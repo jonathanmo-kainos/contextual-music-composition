@@ -24,254 +24,258 @@
         <input type="text" id="user-input" aria-describedby="describe-music" placeholder="Describe the music you'd like to generate in a few words">
         <small id="describe-music" class="form-text text-muted">(Or leave it blank if you just want a random tune)</small>
         <div class="main-btn_wrapper">
-          <button type="button" onclick="generateRandomMusic()" class="btn btn-primary generate-music-button main-btn">Generate music!</button>
+          <button type="button" id="generate-button" class="btn btn-primary generate-music-button main-btn">Generate music!</button>
         </div>
       </div>
       <div class="controls">
         <div class="slider-controls">
-          <input type="range" min="1" max="100" value="50" class="slider" id="slider-1">
-          <input type="range" min="1" max="100" value="50" class="slider" id="slider-2">
-          <input type="range" min="1" max="100" value="50" class="slider" id="slider-3">
-          <input type="range" min="1" max="100" value="50" class="slider" id="slider-4">
-          <input type="range" min="1" max="100" value="50" class="slider" id="slider-5">
-          <input type="range" min="1" max="100" value="50" class="slider" id="slider-6">
-          <input type="range" min="1" max="100" value="50" class="slider" id="slider-7">
-          <input type="range" min="1" max="100" value="50" class="slider" id="slider-8">
-          <input type="range" min="1" max="100" value="50" class="slider" id="slider-9">
-          <input type="range" min="1" max="100" value="50" class="slider" id="slider-10">
+          <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-1">
+          <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-2">
+          <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-3">
+          <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-4">
+          <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-5">
+          <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-6">
+          <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-7">
+          <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-8">
+          <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-9">
+          <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-10">
         </div>
         <div class="music-player"></div>
         <div class="config-controls">
           <div class="config-option">
-            <label class="left config-toggle-label">Sheet music</label>
+            <label class="left config-toggle-label">Note position</label>
             <label class="switch">
-              <input type="checkbox">
+              <input id="music-display-toggle" type="checkbox">
               <span class="toggle round"></span>
             </label>
-            <label class="right config-toggle-label">Note position</label>
+            <label class="right config-toggle-label">Sheet music</label>
           </div>
-          <div class="config-option">
-            <label class="left config-toggle-label">Major</label>
-            <label class="switch">
-              <input type="checkbox">
-              <span class="toggle round"></span>
-            </label>
-            <label class="right config-toggle-label">Minor</label>
-          </div>
+<!--          <div class="config-option">-->
+<!--            <label class="left config-toggle-label">Major</label>-->
+<!--            <label class="switch">-->
+<!--              <input id="tonality-toggle" type="checkbox">-->
+<!--              <span class="toggle round"></span>-->
+<!--            </label>-->
+<!--            <label class="right config-toggle-label">Minor</label>-->
+<!--          </div>-->
           <div class="config-option">
             <label class="left config-toggle-label">Note density</label>
-            <input type="range" min="98" max="100" value="99" step="0.01" class="slider density" id="note-density-slider">
+            <input id="density-slider" type="range" min="98" max="100" value="99" step="0.01" class="slider config-slider">
+          </div>
+          <div class="config-option">
+            <label class="left config-toggle-label">Tempo</label>
+            <input id="tempo-slider" type="range" min="0.2" max="5" value="1" step="0.1" class="slider config-slider">
           </div>
           <div class="config-option">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle config-toggle-label" data-toggle="dropdown">Instrument <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle config-toggle-label" id="instrument-dropdown-header" data-toggle="dropdown">Instrument <b class="caret"></b></a>
               <ul class="dropdown-menu mega-menu">
                 <li class="mega-menu-column">
                   <ul>
                     <li class="nav-header">Piano</li>
-                    <li><a href="#">Acoustic Grand Piano</a></li>
-                    <li><a href="#">Bright Acoustic Piano</a></li>
-                    <li><a href="#">Electric Grand Piano</a></li>
-                    <li><a href="#">Honky-tonk Piano</a></li>
-                    <li><a href="#">Electric Piano 1</a></li>
-                    <li><a href="#">Electric Piano 2</a></li>
-                    <li><a href="#">Harpsichord</a></li>
-                    <li><a href="#">Clavinet</a></li>
+                    <li><a id="0">Acoustic Grand Piano</a></li>
+                    <li><a id="1">Bright Acoustic Piano</a></li>
+                    <li><a id="2">Electric Grand Piano</a></li>
+                    <li><a id="3">Honky-tonk Piano</a></li>
+                    <li><a id="4">Electric Piano 1</a></li>
+                    <li><a id="5">Electric Piano 2</a></li>
+                    <li><a id="6">Harpsichord</a></li>
+                    <li><a id="7">Clavinet</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Chromatic Percussion</li>
-                    <li><a href="#">Celesta</a></li>
-                    <li><a href="#">Glockenspiel</a></li>
-                    <li><a href="#">Music Box</a></li>
-                    <li><a href="#">Vibraphone</a></li>
-                    <li><a href="#">Marimba</a></li>
-                    <li><a href="#">Xylophone</a></li>
-                    <li><a href="#">Tubular Bells</a></li>
-                    <li><a href="#">Dulcimer</a></li>
+                    <li><a id="8">Celesta</a></li>
+                    <li><a id="9">Glockenspiel</a></li>
+                    <li><a id="10">Music Box</a></li>
+                    <li><a id="11">Vibraphone</a></li>
+                    <li><a id="12">Marimba</a></li>
+                    <li><a id="13">Xylophone</a></li>
+                    <li><a id="14">Tubular Bells</a></li>
+                    <li><a id="15">Dulcimer</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Organ</li>
-                    <li><a href="#">Drawbar Organ</a></li>
-                    <li><a href="#">Percussive Organ</a></li>
-                    <li><a href="#">Rock Organ</a></li>
-                    <li><a href="#">Church Organ</a></li>
-                    <li><a href="#">Reed Organ</a></li>
-                    <li><a href="#">Accordion</a></li>
-                    <li><a href="#">Harmonica</a></li>
-                    <li><a href="#">Tango Accordion</a></li>
+                    <li><a id="16">Drawbar Organ</a></li>
+                    <li><a id="17">Percussive Organ</a></li>
+                    <li><a id="18">Rock Organ</a></li>
+                    <li><a id="19">Church Organ</a></li>
+                    <li><a id="20">Reed Organ</a></li>
+                    <li><a id="21">Accordion</a></li>
+                    <li><a id="22">Harmonica</a></li>
+                    <li><a id="23">Tango Accordion</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Guitar</li>
-                    <li><a href="#">Acoustic Guitar (nylon)</a></li>
-                    <li><a href="#">Acoustic Guitar (steel)</a></li>
-                    <li><a href="#">Electric Guitar (jazz)</a></li>
-                    <li><a href="#">Electric Guitar (clean)</a></li>
-                    <li><a href="#">Electric Guitar (muted)</a></li>
-                    <li><a href="#">Overdriven Guitar</a></li>
-                    <li><a href="#">Distortion Guitar</a></li>
-                    <li><a href="#">Guitar harmonics</a></li>
+                    <li><a id="24">Acoustic Guitar (nylon)</a></li>
+                    <li><a id="25">Acoustic Guitar (steel)</a></li>
+                    <li><a id="26">Electric Guitar (jazz)</a></li>
+                    <li><a id="27">Electric Guitar (clean)</a></li>
+                    <li><a id="28">Electric Guitar (muted)</a></li>
+                    <li><a id="29">Overdriven Guitar</a></li>
+                    <li><a id="30">Distortion Guitar</a></li>
+                    <li><a id="31">Guitar harmonics</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Bass</li>
-                    <li><a href="#">Acoustic Bass</a></li>
-                    <li><a href="#">Electric Bass (finger)</a></li>
-                    <li><a href="#">Electric Bass (pick)</a></li>
-                    <li><a href="#">Fretless Bass</a></li>
-                    <li><a href="#">Slap Bass 1</a></li>
-                    <li><a href="#">Slap Bass 2</a></li>
-                    <li><a href="#">Synth Bass 1</a></li>
-                    <li><a href="#">Synth Bass 2</a></li>
+                    <li><a id="32">Acoustic Bass</a></li>
+                    <li><a id="33">Electric Bass (finger)</a></li>
+                    <li><a id="34">Electric Bass (pick)</a></li>
+                    <li><a id="35">Fretless Bass</a></li>
+                    <li><a id="36">Slap Bass 1</a></li>
+                    <li><a id="37">Slap Bass 2</a></li>
+                    <li><a id="38">Synth Bass 1</a></li>
+                    <li><a id="39">Synth Bass 2</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Strings</li>
-                    <li><a href="#">Violin</a></li>
-                    <li><a href="#">Viola</a></li>
-                    <li><a href="#">Cello</a></li>
-                    <li><a href="#">Contrabass</a></li>
-                    <li><a href="#">Tremolo Strings</a></li>
-                    <li><a href="#">Pizzicato Strings</a></li>
-                    <li><a href="#">Orchestral Harp</a></li>
-                    <li><a href="#">Timpani</a></li>
+                    <li><a id="40">Violin</a></li>
+                    <li><a id="41">Viola</a></li>
+                    <li><a id="42">Cello</a></li>
+                    <li><a id="43">Contrabass</a></li>
+                    <li><a id="44">Tremolo Strings</a></li>
+                    <li><a id="45">Pizzicato Strings</a></li>
+                    <li><a id="46">Orchestral Harp</a></li>
+                    <li><a id="47">Timpani</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">More Strings!</li>
-                    <li><a href="#">String Ensemble 1</a></li>
-                    <li><a href="#">String Ensemble 2</a></li>
-                    <li><a href="#">Synth Strings 1</a></li>
-                    <li><a href="#">Synth Strings 2</a></li>
-                    <li><a href="#">Choir Aahs</a></li>
-                    <li><a href="#">Voice Oohs</a></li>
-                    <li><a href="#">Synth Voice</a></li>
-                    <li><a href="#">Orchestra Hit</a></li>
+                    <li><a id="48">String Ensemble 1</a></li>
+                    <li><a id="49">String Ensemble 2</a></li>
+                    <li><a id="50">Synth Strings 1</a></li>
+                    <li><a id="51">Synth Strings 2</a></li>
+                    <li><a id="52">Choir Aahs</a></li>
+                    <li><a id="53">Voice Oohs</a></li>
+                    <li><a id="54">Synth Voice</a></li>
+                    <li><a id="55">Orchestra Hit</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Brass</li>
-                    <li><a href="#">Trumpet</a></li>
-                    <li><a href="#">Trombone</a></li>
-                    <li><a href="#">Tuba</a></li>
-                    <li><a href="#">Muted Trumpet</a></li>
-                    <li><a href="#">French Horn</a></li>
-                    <li><a href="#">Brass Section</a></li>
-                    <li><a href="#">Synth Brass 1</a></li>
-                    <li><a href="#">Synth Brass 2</a></li>
+                    <li><a id="56">Trumpet</a></li>
+                    <li><a id="57">Trombone</a></li>
+                    <li><a id="58">Tuba</a></li>
+                    <li><a id="59">Muted Trumpet</a></li>
+                    <li><a id="60">French Horn</a></li>
+                    <li><a id="61">Brass Section</a></li>
+                    <li><a id="62">Synth Brass 1</a></li>
+                    <li><a id="63">Synth Brass 2</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Reed</li>
-                    <li><a href="#">Soprano Sax</a></li>
-                    <li><a href="#">Alto Sax</a></li>
-                    <li><a href="#">Tenor Sax</a></li>
-                    <li><a href="#">Baritone Sax</a></li>
-                    <li><a href="#">Oboe</a></li>
-                    <li><a href="#">English Horn</a></li>
-                    <li><a href="#">Bassoon</a></li>
-                    <li><a href="#">Clarinet</a></li>
+                    <li><a id="64">Soprano Sax</a></li>
+                    <li><a id="65">Alto Sax</a></li>
+                    <li><a id="66">Tenor Sax</a></li>
+                    <li><a id="67">Baritone Sax</a></li>
+                    <li><a id="68">Oboe</a></li>
+                    <li><a id="69">English Horn</a></li>
+                    <li><a id="70">Bassoon</a></li>
+                    <li><a id="71">Clarinet</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Pipe</li>
-                    <li><a href="#">Piccolo</a></li>
-                    <li><a href="#">Flute</a></li>
-                    <li><a href="#">Recorder</a></li>
-                    <li><a href="#">Pan Flute</a></li>
-                    <li><a href="#">Blown Bottle</a></li>
-                    <li><a href="#">Shakuhachi</a></li>
-                    <li><a href="#">Whistle</a></li>
-                    <li><a href="#">Ocarina</a></li>
+                    <li><a id="72">Piccolo</a></li>
+                    <li><a id="73">Flute</a></li>
+                    <li><a id="74">Recorder</a></li>
+                    <li><a id="75">Pan Flute</a></li>
+                    <li><a id="76">Blown Bottle</a></li>
+                    <li><a id="77">Shakuhachi</a></li>
+                    <li><a id="78">Whistle</a></li>
+                    <li><a id="79">Ocarina</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Synth Lead</li>
-                    <li><a href="#">Lead 1 (square)</a></li>
-                    <li><a href="#">Lead 2 (sawtooth)</a></li>
-                    <li><a href="#">Lead 3 (calliope)</a></li>
-                    <li><a href="#">Lead 4 (chiff)</a></li>
-                    <li><a href="#">Lead 5 (charang)</a></li>
-                    <li><a href="#">Lead 6 (voice)</a></li>
-                    <li><a href="#">Lead 7 (fifths)</a></li>
-                    <li><a href="#">Lead 8 (bass + lead)</a></li>
+                    <li><a id="80">Lead 1 (square)</a></li>
+                    <li><a id="81">Lead 2 (sawtooth)</a></li>
+                    <li><a id="82">Lead 3 (calliope)</a></li>
+                    <li><a id="83">Lead 4 (chiff)</a></li>
+                    <li><a id="84">Lead 5 (charang)</a></li>
+                    <li><a id="85">Lead 6 (voice)</a></li>
+                    <li><a id="86">Lead 7 (fifths)</a></li>
+                    <li><a id="87">Lead 8 (bass + lead)</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Synth Pad</li>
-                    <li><a href="#">Pad 1 (new age)</a></li>
-                    <li><a href="#">Pad 2 (warm)</a></li>
-                    <li><a href="#">Pad 3 (polysynth)</a></li>
-                    <li><a href="#">Pad 4 (choir)</a></li>
-                    <li><a href="#">Pad 5 (bowed)</a></li>
-                    <li><a href="#">Pad 6 (metallic)</a></li>
-                    <li><a href="#">Pad 7 (halo)</a></li>
-                    <li><a href="#">Pad 8 (sweep)</a></li>
+                    <li><a id="88">Pad 1 (new age)</a></li>
+                    <li><a id="89">Pad 2 (warm)</a></li>
+                    <li><a id="90">Pad 3 (polysynth)</a></li>
+                    <li><a id="91">Pad 4 (choir)</a></li>
+                    <li><a id="92">Pad 5 (bowed)</a></li>
+                    <li><a id="93">Pad 6 (metallic)</a></li>
+                    <li><a id="94">Pad 7 (halo)</a></li>
+                    <li><a id="95">Pad 8 (sweep)</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Synth Effects</li>
-                    <li><a href="#">FX 1 (rain)</a></li>
-                    <li><a href="#">FX 2 (soundtrack)</a></li>
-                    <li><a href="#">FX 3 (crystal)</a></li>
-                    <li><a href="#">FX 4 (atmosphere)</a></li>
-                    <li><a href="#">FX 5 (brightness)</a></li>
-                    <li><a href="#">FX 6 (goblins)</a></li>
-                    <li><a href="#">FX 7 (echoes)</a></li>
-                    <li><a href="#">FX 8 (sci-fi)</a></li>
+                    <li><a id="96">FX 1 (rain)</a></li>
+                    <li><a id="97">FX 2 (soundtrack)</a></li>
+                    <li><a id="98">FX 3 (crystal)</a></li>
+                    <li><a id="99">FX 4 (atmosphere)</a></li>
+                    <li><a id="100">FX 5 (brightness)</a></li>
+                    <li><a id="101">FX 6 (goblins)</a></li>
+                    <li><a id="102">FX 7 (echoes)</a></li>
+                    <li><a id="103">FX 8 (sci-fi)</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Ethnic</li>
-                    <li><a href="#">Sitar</a></li>
-                    <li><a href="#">Banjo</a></li>
-                    <li><a href="#">Shamisen</a></li>
-                    <li><a href="#">Koto</a></li>
-                    <li><a href="#">Kalimba</a></li>
-                    <li><a href="#">Bag pipe</a></li>
-                    <li><a href="#">Fiddle</a></li>
-                    <li><a href="#">Shanai</a></li>
+                    <li><a id="104">Sitar</a></li>
+                    <li><a id="105">Banjo</a></li>
+                    <li><a id="106">Shamisen</a></li>
+                    <li><a id="107">Koto</a></li>
+                    <li><a id="108">Kalimba</a></li>
+                    <li><a id="109">Bag pipe</a></li>
+                    <li><a id="110">Fiddle</a></li>
+                    <li><a id="111">Shanai</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Percussive</li>
-                    <li><a href="#">Tinkle Bell</a></li>
-                    <li><a href="#">Agogo</a></li>
-                    <li><a href="#">Steel Drums</a></li>
-                    <li><a href="#">Woodblock</a></li>
-                    <li><a href="#">Taiko Drum</a></li>
-                    <li><a href="#">Melodic Tom</a></li>
-                    <li><a href="#">Synth Drum</a></li>
-                    <li><a href="#">Reverse Cymbal</a></li>
+                    <li><a id="112">Tinkle Bell</a></li>
+                    <li><a id="113">Agogo</a></li>
+                    <li><a id="114">Steel Drums</a></li>
+                    <li><a id="115">Woodblock</a></li>
+                    <li><a id="116">Taiko Drum</a></li>
+                    <li><a id="117">Melodic Tom</a></li>
+                    <li><a id="118">Synth Drum</a></li>
+                    <li><a id="119">Reverse Cymbal</a></li>
                   </ul>
                 </li>
                 <li class="mega-menu-column">
                   <ul>
                   <li class="nav-header">Sound effects</li>
-                    <li><a href="#">Guitar Fret Noise</a></li>
-                    <li><a href="#">Breath Noise</a></li>
-                    <li><a href="#">Seashore</a></li>
-                    <li><a href="#">Bird Tweet</a></li>
-                    <li><a href="#">Telephone Ring</a></li>
-                    <li><a href="#">Helicopter</a></li>
-                    <li><a href="#">Applause</a></li>
-                    <li><a href="#">Gunshot</a></li>
+                    <li><a id="120">Guitar Fret Noise</a></li>
+                    <li><a id="121">Breath Noise</a></li>
+                    <li><a id="122">Seashore</a></li>
+                    <li><a id="123">Bird Tweet</a></li>
+                    <li><a id="124">Telephone Ring</a></li>
+                    <li><a id="125">Helicopter</a></li>
+                    <li><a id="126">Applause</a></li>
+                    <li><a id="127">Gunshot</a></li>
                   </ul>
                 </li>
               </ul><!-- dropdown-menu -->

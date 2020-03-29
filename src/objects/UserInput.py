@@ -12,5 +12,4 @@ class UserInput(object):
 
 
 def define_user_input(text, instrument_number, note_certainty, note_speed):
-    user_input = UserInput(text, instrument_number, note_certainty, note_speed)
-    return user_input
+    return UserInput(text, instrument_number, note_certainty, note_speed)

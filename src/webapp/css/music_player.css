@@ -747,7 +747,7 @@ body {
 }
 
 .config-option {
-  height: 10vh;
+  height: 8vh;
 }
 
 .slider {
@@ -761,7 +761,7 @@ body {
   padding: 0;
   margin: 10%;
 }
-.density {
+.config-slider {
   width: 43%;
   display: inline-block;
   margin-left: 1.2vw;
@@ -804,8 +804,7 @@ body {
 }
 
 .config-toggle-label {
-	line-height: 10vh;
-  display: inline-block;
+  line-height: 10vh;
   width: 30%;
 }
 .right {
@@ -903,6 +902,10 @@ input:checked + .toggle:before {
 	margin-right: 20px;
 	width: 150px;
 	float: left;
+}
+
+.mega-menu-column a {
+	cursor: pointer;
 }
 
 .mega-menu .nav-header {
