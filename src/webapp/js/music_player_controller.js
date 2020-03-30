@@ -1,57 +1,70 @@
+$(document).ready(function() {
+    MIDIjs.initAll();
+});
+
 var userInput = '';
 var instrumentNumber = 0;
 var displaySheetMusic = false;
-//var minorTonality = false;
 var noteDensity = 99.9;
 var tempo = 1;
 var sliderValues = [];
 
-$('#generate-button').bind('click', function() {
-    MIDIjs.initAll();
-	var userInput = $('#user-input').val();
+$('#generate-button').one('click', function() {
+	userInput = $('#user-input').val();
+
+	console.log('userInput: ', userInput);
+
+    $.get('/generateRandomMusic', {userInput: userInput}, function(data) {
+        console.log('data: ', data);
+        setSliderValues(data);
+
+		MIDIjs.play('../outputs/live/livesong.mid');
+    });
+    $('#generate-button').prop('id', 'generate-button-clicked');
+    return false;
+});
+
+$(document).on('click', '#generate-button-clicked', function() {
+	userInput = $('#user-input').val();
 	noteDensity = $('#density-slider').val();
 	tempo = $('#tempo-slider').val();
-	getSliderValues();
+	displaySheetMusic = $('#music-display-toggle').is(":checked");
+	sliderValues = getSliderValues();
 
 	console.log('userInput: ', userInput);
 	console.log('instrumentNumber: ', instrumentNumber);
 	console.log('displaySheetMusic: ', displaySheetMusic);
-//	console.log('minorTonality: ', minorTonality);
 	console.log('noteDensity: ', noteDensity);
 	console.log('tempo: ', tempo);
 
-    $.get('/generateRandomMusic', {
+    $.get('/generateSpecifiedMusic', {
             userInput: userInput,
             instrumentNumber: instrumentNumber,
             displaySheetMusic: displaySheetMusic,
-//            minorTonality: minorTonality,
             noteDensity: noteDensity,
             tempo: tempo,
             sliderValues: sliderValues}, function(data) {
         console.log('data: ', data);
-        setSliderValues(data);
 
 		MIDIjs.play('../outputs/live/livesong.mid');
     });
     return false;
 });
 
+// WATCHERS
 $('.mega-menu-column a').click(function() {
    instrumentNumber = $(this).attr('id');
    $("#instrument-dropdown-header").text('Instrument: ' + $(this).text());
    console.log(instrumentNumber);
 });
 
-$('#music-display-toggle').click(function() {
-   displaySheetMusic = $(this).is(":checked");
-   console.log(displaySheetMusic);
-});
-
 function getSliderValues() {
+	sliderValues = [];
 	for(i = 1; i < 11; i++) {
-		sliderValues[i-1] = $('#slider-' + i).val();
+		sliderValues.push($('#slider-' + i).val());
 	}
 	console.log('sliderValues: ', sliderValues);
+	return JSON.stringify(sliderValues);
 }
 
 function setSliderValues(valuesArray) {
@@ -63,8 +76,3 @@ function setSliderValues(valuesArray) {
 	}
 	console.log('valuesArray: ', valuesArray);
 }
-
-//$('#tonality-toggle').click(function() {
-//   minorTonality = $(this).is(":checked");
-//   console.log(minorTonality);
-//});

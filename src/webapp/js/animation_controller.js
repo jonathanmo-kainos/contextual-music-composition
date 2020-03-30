@@ -1,12 +1,12 @@
 // ===== Mini Player - Play/Pause Switch =====
 
-$('.btn-play').click(function(){
+$('.btn-play').click(function() {
 	TweenMax.to($('.btn-play'), 0.2, {x: 20, opacity: 0, scale: 0.3,  display: 'none', ease: Power2.easeInOut});
 	TweenMax.fromTo($('.btn-pause'), 0.2, {x: -20, opacity: 0, scale: 0.3, display: 'none'},
 								 {x: 0, opacity: 1, scale: 1, display: 'block', ease: Power2.easeInOut});
 });
 
-$('.btn-pause').click(function(){
+$('.btn-pause').click(function() {
 	TweenMax.to($('.btn-pause'), 0.2, {x: 20, opacity: 0, display: 'none', scale: 0.3, ease: Power2.easeInOut});
 	TweenMax.fromTo($('.btn-play'), 0.2, {x: -20, opacity: 0, scale: 0.3, display: 'none'},
 								 {x: 0, opacity: 1, display: 'block', scale: 1, ease: Power2.easeInOut});
@@ -14,7 +14,7 @@ $('.btn-pause').click(function(){
 
 // ===== HoverIn/HoverOut Flash Effect =====
 
-$('.track_info').hover(function(){
+$('.track_info').hover(function() {
 
 	TweenMax.fromTo($(this), 0.5, {opacity: 0.5, ease: Power2.easeInOut},
 								 {opacity: 1})},
@@ -22,7 +22,7 @@ $('.track_info').hover(function(){
 		$(this).css("opacity", "1");
 });
 
-$('.burger-wrapper, .logo-text, .back_btn').hover(function(){
+$('.burger-wrapper, .logo-text, .back_btn').hover(function() {
 
 	TweenMax.fromTo($(this), 0.5, {opacity: 0.5, ease: Power2.easeInOut},
 								 {opacity: 1})},
@@ -30,7 +30,7 @@ $('.burger-wrapper, .logo-text, .back_btn').hover(function(){
 		$(this).css("opacity", "1")
 });
 
-$('.btn-open-player').hover(function(){
+$('.btn-open-player').hover(function() {
 
 	TweenMax.fromTo($(this), 0.5, {opacity: 0.5, ease: Power2.easeInOut},
 								 {opacity: 1})},
@@ -38,7 +38,7 @@ $('.btn-open-player').hover(function(){
 		$(this).css("opacity", "1")
 });
 
-$('.nav a').hover(function(){
+$('.nav a').hover(function() {
 
 	TweenMax.fromTo($(this), 0.5, {opacity: 0.5, ease: Power2.easeInOut},
 								 {opacity: 1})},
@@ -55,7 +55,7 @@ $('.list_item').click(function() {
 
 // ===== Main Play Button - Hover =====
 
-$('.text-wrap .text').hover(function(){
+$('.text-wrap .text').hover(function() {
 	TweenMax.to($('.main-btn_wrapper'), 0.5, {opacity: 1, display: 'block', position: 'absolute', scale: 1, ease: Elastic.easeOut.config(1, 0.75)}),
 	TweenMax.to($('.line'), 0.5, {css: { scaleY: 0.6, transformOrigin: "center center" }, ease: Expo.easeOut})},
 
@@ -64,10 +64,9 @@ $('.text-wrap .text').hover(function(){
 		TweenMax.to($('.line'), 0.5, {css: { scaleY: 1, transformOrigin: "center center" }, ease: Expo.easeOut})
 });
 
-// ===== Home Page to Curation Page Transition  =====
-// ===== Main Play Button Activate =====
+// ===== Generate Music Button Activate =====
 
-$('.main-btn').click(function(){
+$('#generate-button').click(function() {
 	var homeToMain = new TimelineMax({});
 
 	// Hide
@@ -84,7 +83,7 @@ $('.main-btn').click(function(){
 });
 
 // ===== Back Button Activate =====
-$('.back_btn').click(function(){
+$('.back_btn').click(function() {
 // ===== From Playlist(3) to Main(2)
 	if($('#curator').css("display") == "none"){
 		var playlistToMain = new TimelineMax({});
@@ -125,7 +124,7 @@ $('.back_btn').click(function(){
 });
 
 // Dropdown Menu Fade
-jQuery(document).ready(function(){
+jQuery(document).ready(function() {
     $(".dropdown").hover(
         function() { $('.dropdown-menu', this).fadeIn("fast");
         },

@@ -1,16 +1,12 @@
 from tensorflow.compat.v1.keras.models import load_model
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Sequential
-from sklearn.decomposition import PCA
-from random import uniform
 import numpy as np
-import objects.PCASliderComponent
 import enums
 
 ALL = 'all'
 MAJOR = 'major'
 MINOR = 'minor'
-NUM_PCA_COMPONENTS = 50
 
 
 def split_autoencoder_trained_model_into_encoder_and_decoder_models(model):
@@ -55,43 +51,8 @@ def generate_and_save_samples_encoded(samples, name):
     np.save(enums.get_encoded_samples_filepath(name), encoded_samples)
 
 
-def convert_pca_components_to_random_decoder_input(name):
-    pca = get_pca(np.load(enums.get_encoded_samples_filepath(name)))
-    encoded_samples = np.load(enums.get_encoded_samples_filepath(name))
-
-    random_input = []
-    slider_components = []
-    for i in range(NUM_PCA_COMPONENTS):
-        bottom_limit = np.percentile(pca.transform(encoded_samples), 5, axis=0)[i]
-        top_limit = np.percentile(pca.transform(encoded_samples), 95, axis=0)[i]
-        increment_value_between_limits = (top_limit - bottom_limit) / 500
-        random_number_between_limits = uniform(bottom_limit, top_limit)
-        random_input.append(random_number_between_limits)
-
-        slider_components.append(objects.PCASliderComponent.define_pca_slider_component(bottom_limit, top_limit, increment_value_between_limits, random_number_between_limits))
-
-        if enums.EnvVars.DEBUG_MODE:
-            print('bottom limit: ' + str(bottom_limit) + ' top limit: ' + str(top_limit))
-
-    if enums.EnvVars.DEBUG_MODE:
-        print('pca mean: ')
-        print(pca.mean_)
-
-    return pca.inverse_transform(random_input), slider_components
-
-
-def get_pca(samples):
-    pca = PCA(n_components=NUM_PCA_COMPONENTS)
-    pca.fit(samples)
-    return pca
-
-
 # model = load_model(enums.AUTOENCODER_2000_FILEPATH)
 # split_autoencoder_trained_model_into_encoder_and_decoder_models(model)
 
 # generate_and_save_samples_encoded(np.load(enums.MAJOR_SAMPLES_FILEPATH), MAJOR)
 # generate_and_save_samples_encoded(np.load(enums.MINOR_SAMPLES_FILEPATH), MINOR)
-#
-# save_pca_components_of_samples(ALL)
-# save_pca_components_of_samples(MAJOR)
-# save_pca_components_of_samples(MINOR)
