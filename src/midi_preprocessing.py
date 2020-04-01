@@ -1,9 +1,11 @@
 from mido import MidiFile, Message, MidiTrack
+from midi2audio import FluidSynth
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.cm as cm
-import enums
 import os
+import enums
+import objects.Note
 
 samples_per_bar = 96
 number_of_notes = 96
@@ -27,7 +29,7 @@ def midi_to_samples(midi_file_name):
     ticks_per_beat = mid.ticks_per_beat
     ticks_per_bar = 0
     new_ticks_per_bar = (ticks_per_beat * default_time_signature_numerator) * (
-                default_beats_per_bar / default_time_signature_denominator)
+            default_beats_per_bar / default_time_signature_denominator)
 
     song_ticks_per_bar_change_times = []
     song_ticks_per_bar = []
@@ -134,9 +136,9 @@ def midi_to_samples(midi_file_name):
     return song_bars
 
 
-def samples_to_midi(samples, instrument_number, song_name, certainty_for_note_to_be_played):
+def samples_to_midi(samples, instrument_number, note_length, song_name, certainty_for_note_to_be_played):
     boolean_matrix = samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_played)
-    boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name)
+    boolean_matrix_to_midi(boolean_matrix, instrument_number, note_length, song_name)
 
 
 def samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_played):
@@ -162,25 +164,38 @@ def samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_playe
     return output_midi_array
 
 
-def boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name):
+def boolean_matrix_to_midi(boolean_matrix, instrument_number, note_length, song_name):
     mid = MidiFile()
     track = MidiTrack()
     track.append(Message('program_change', program=instrument_number, time=0))
 
     ticks_per_sample = int(round(((mid.ticks_per_beat * default_beats_per_bar) / samples_per_bar)))
 
-    previous_bar_index = 0
-    previous_active_sample_index = 0
+    notes_to_turn_off = []
+
+    previous_message_bar_index = 0
+    previous_message_sample_index = 0
     for bar_index in range(number_of_bars):
         for sample_index in range(samples_per_bar):
+            # Turn off notes
+            for note in notes_to_turn_off:
+                if note.absolute_sample_index + note_length == (sample_index + (samples_per_bar * bar_index)):
+                    delta_time = calculate_delta_time(sample_index, bar_index, previous_message_sample_index, previous_message_bar_index, ticks_per_sample)
+
+                    track.append(Message(note_off, note=note.note, velocity=0, time=delta_time))
+                    previous_message_sample_index = sample_index
+                    previous_message_bar_index = bar_index
+            # Turn on notes
             for note_index in range(number_of_notes):
                 if boolean_matrix[bar_index, note_index, sample_index]:
-                    delta_time = (((sample_index + (samples_per_bar * bar_index)) -
-                                   (previous_active_sample_index + (samples_per_bar * previous_bar_index))) * ticks_per_sample)
-                    track.append(Message(note_on, note=note_index + 16, velocity=100, time=delta_time))
+                    delta_time = calculate_delta_time(sample_index, bar_index, previous_message_sample_index, previous_message_bar_index, ticks_per_sample)
 
-                    previous_active_sample_index = sample_index
-                    previous_bar_index = bar_index
+                    track.append(Message(note_on, note=note_index + 16, velocity=100, time=delta_time))
+                    current_note = objects.Note.define_note(note_index + 16, (sample_index + (samples_per_bar * bar_index)))
+                    previous_message_sample_index = sample_index
+                    previous_message_bar_index = bar_index
+
+                    notes_to_turn_off.append(current_note)
 
     mid.tracks.append(track)
 
@@ -188,3 +203,14 @@ def boolean_matrix_to_midi(boolean_matrix, instrument_number, song_name):
         mid.save('../outputs//' + song_name + '/' + song_name + '.mid')
     else:
         mid.save(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
+        # using the default sound font in 44100 Hz sample rate
+        # fs = FluidSynth()
+        # fs.midi_to_audio(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid', enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.wav')
+        #
+        # # FLAC, a lossless codec, is supported as well (and recommended to be used)
+        # fs.midi_to_audio(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid', enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.flac')
+
+
+def calculate_delta_time(sample_index, bar_index, previous_message_sample_index, previous_message_bar_index, ticks_per_sample):
+    return (((sample_index + (samples_per_bar * bar_index)) -
+             (previous_message_sample_index + (samples_per_bar * previous_message_bar_index))) * ticks_per_sample)

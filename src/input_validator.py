@@ -1,14 +1,15 @@
 import objects.UserInput
 
 
-def validate_user_input(text, instrument_number, note_certainty, note_speed, slider_values):
+def validate_user_input(text, instrument_number, note_length, note_certainty, note_speed, slider_values):
     text = validate_text(text)
     instrument_number = validate_instrument_number(instrument_number)
     note_certainty = validate_note_certainty(note_certainty)
     note_speed = validate_note_speed(note_speed)
+    note_length = validate_note_length(note_length)
     slider_values = validate_slider_values(slider_values)
 
-    return objects.UserInput.define_user_input(text, instrument_number, note_certainty, note_speed, slider_values)
+    return objects.UserInput.define_user_input(text, instrument_number, note_certainty, note_speed, note_length, slider_values)
 
 
 def validate_text(text):
@@ -18,21 +19,27 @@ def validate_text(text):
 
 
 def validate_instrument_number(instrument_number):
-    if not instrument_number or type(instrument_number) is not int or int(instrument_number) > 127 or int(instrument_number) < 0:
+    if not instrument_number or int(instrument_number) > 127 or int(instrument_number) < 0:
         instrument_number = 0
     return int(instrument_number)
 
 
 def validate_note_certainty(note_certainty):
-    if not note_certainty or type(note_certainty) is not float or float(note_certainty) < 99 or float(note_certainty) > 100:
+    if not note_certainty or float(note_certainty) < 99 or float(note_certainty) > 100:
         note_certainty = 99.9
     return float(note_certainty)
 
 
 def validate_note_speed(note_speed):
-    if not note_speed or type(note_speed) is not float or float(note_speed) > 5 or float(note_speed) < 0.2:
+    if not note_speed or float(note_speed) > 5 or float(note_speed) < 0.2:
         note_speed = 1
     return float(note_speed)
+
+
+def validate_note_length(note_length):
+    if not note_length or int(note_length) > 500 or int(note_length) < 5:
+        note_length = 50
+    return int(note_length)
 
 
 def validate_slider_values(slider_values):

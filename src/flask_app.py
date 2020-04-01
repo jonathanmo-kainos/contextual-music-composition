@@ -27,11 +27,12 @@ def generate_specified_music():
     user_input_text = request.args.get('userInput')
     display_sheet_music = request.args.get('displaySheetMusic')
     instrument_number = request.args.get('instrumentNumber')
-    note_density = request.args.get('noteDensity')
+    note_length = request.args.get('noteLength')
+    note_certainty = request.args.get('noteCertainty')
     tempo = request.args.get('tempo')
     slider_values = json.loads(request.args.get('sliderValues'))
 
-    model_output.generate_user_context_song(user_input_text, display_sheet_music, instrument_number, note_density, tempo, slider_values)
+    model_output.generate_user_context_song(user_input_text, display_sheet_music, instrument_number, note_length, note_certainty, tempo, slider_values)
 
     return send_file(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
 
