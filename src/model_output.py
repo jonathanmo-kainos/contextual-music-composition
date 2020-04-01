@@ -5,6 +5,10 @@ import enums
 import pca_utils
 import sentiment_analysis
 
+default_instrument = 0
+default_note_length = 50
+default_note_certainty = 99.9
+
 
 def generate_random_song(user_input_text):
     decoder = load_model(enums.EnvVars.DECODER_2000_FILEPATH)
@@ -23,14 +27,14 @@ def generate_random_song(user_input_text):
     song_name = 'autoencoder 2000 ' + str(random_input[0]) + ' ' + user_input + ' 0'
 
     samples = decoder.predict(random_input.reshape(-1, 120))
-    midi_preprocessing.samples_to_midi(samples, 0, song_name, 99.9)
+    midi_preprocessing.samples_to_midi(samples, default_instrument, default_note_length, song_name, default_note_certainty)
     return slider_components
 
 
-def generate_user_context_song(user_input_text, display_sheet_music, instrument_number, note_certainty, note_speed, slider_values):
+def generate_user_context_song(user_input_text, display_sheet_music, instrument_number, note_length, note_certainty, note_speed, slider_values):
     decoder = load_model(enums.EnvVars.DECODER_2000_FILEPATH)
 
-    user_input = input_validator.validate_user_input(user_input_text, instrument_number, note_certainty, note_speed, slider_values)
+    user_input = input_validator.validate_user_input(user_input_text, instrument_number, note_length, note_certainty, note_speed, slider_values)
 
     if user_input.text is not '':
         sample_type = 'minor'
@@ -44,5 +48,5 @@ def generate_user_context_song(user_input_text, display_sheet_music, instrument_
     song_name = 'autoencoder 2000 ' + str(specified_input[0]) + ' ' + user_input.text + ' ' + str(user_input.instrument_number)
 
     samples = decoder.predict(specified_input.reshape(-1, 120))
-    midi_preprocessing.samples_to_midi(samples, user_input.instrument_number, song_name, user_input.note_certainty)
+    midi_preprocessing.samples_to_midi(samples, user_input.instrument_number, note_length, song_name, user_input.note_certainty)
     return
