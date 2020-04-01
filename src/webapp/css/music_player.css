@@ -807,6 +807,11 @@ body {
   line-height: 10vh;
   width: 30%;
 }
+
+.center {
+	text-align: center;
+}
+
 .right {
   text-align: left;
 }
@@ -885,6 +890,7 @@ input:checked + .toggle:before {
 .dropdown {
 	text-align: center;
 }
+
 .dropdown-menu {
 	left: -10vw;
 	top: 7vh;
@@ -917,4 +923,38 @@ input:checked + .toggle:before {
 	border-bottom: 1px solid #ddd;
 	text-align: center;
 	font-weight: 600;
+}
+
+.sliders-header {
+    margin-left: 46%;
+}
+
+.sliders-header:hover .sliders-tooltip {
+  visibility: visible;
+}
+
+.sliders-header .sliders-tooltip {visibility: hidden;
+    color: black;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 102%;
+    left: 40%;
+    margin-left: -60px;
+    font-size: 0.9em;
+    border-style: solid;
+    border-color: #2c3e50;
+}
+
+.sliders-header .sliders-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
 }
