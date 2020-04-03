@@ -108,10 +108,7 @@ body {
   position: relative;
 }
 .text-wrap span {
-  color: #fff9e1;
-  font-size: 100px;
   font-weight: 300;
-  padding: 0 2%;
 }
 
 .header {
@@ -859,11 +856,18 @@ input:checked + .toggle:before {
 	margin-left: 1vw;
 }
 
+
+#sliders-header-tooltip {
+	padding-left: 2%;
+}
+
 .sliders-header:hover .sliders-tooltip {
   visibility: visible;
 }
 
-.sliders-header .sliders-tooltip {visibility: hidden;
+.sliders-tooltip {
+    font-family: 'Oswald', sans-serif;
+	visibility: hidden;
     color: black;
     text-align: center;
     border-radius: 6px;
@@ -871,14 +875,13 @@ input:checked + .toggle:before {
     position: absolute;
     z-index: 1;
     bottom: 90%;
-    width: 10%;
+    width: 12%;
     left: 2%;
-    font-size: 0.9em;
     border-style: solid;
     border-color: #2c3e50;
 }
 
-.sliders-header .sliders-tooltip::after {
+.sliders-tooltip::after {
   content: "";
   position: absolute;
   top: 100%;
@@ -913,6 +916,7 @@ input:checked + .toggle:before {
 
 .time-info {
 	text-align: left;
+	margin-left: 2vw;
 }
 
 #first-bar-row {

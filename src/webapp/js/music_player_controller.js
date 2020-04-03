@@ -1,7 +1,14 @@
 $(document).ready(function() {
 	MIDIjs.player_callback = displayTime;
 	function displayTime(playerEvent) {
-		$('#current-time').text(Math.floor(playerEvent.time));
+		var timeToDisplay;
+		var currentTime = Math.floor(playerEvent.time);
+		if (currentTime < 10) {
+			timeToDisplay = '00:0' + currentTime;
+		} else {
+			timeToDisplay = '00:' + currentTime;
+		}
+		$('#current-time').text(timeToDisplay);
 	};
 });
 
@@ -25,9 +32,17 @@ $('#generate-button').one('click', function() {
         setSliderValues(data);
 
 //		MIDIjs.play('../outputs/live/livesong.mid');
-//		MIDIjs.get_duration('../outputs/live/livesong.mid', function(seconds) { $('#total-time').text('/' + seconds);});
+//		MIDIjs.get_duration('../outputs/live/livesong.mid', function(seconds) {
+//			var totalTime = Math.round(seconds);
+//			var totalTimeToDisplay = ' / 00:' + totalTime;
+//			$('#total-time').text(totalTimeToDisplay);
+//		});
 		MIDIjs.play('http://127.0.0.1:8887/livesong.mid');
-		MIDIjs.get_duration('http://127.0.0.1:8887/livesong.mid', function(seconds) { $('#total-time').text('/' + Math.round(seconds));});
+		MIDIjs.get_duration('http://127.0.0.1:8887/livesong.mid', function(seconds) {
+			var totalTime = Math.round(seconds);
+			var totalTimeToDisplay = ' / 00:' + totalTime;
+			$('#total-time').text(totalTimeToDisplay);
+		});
     }).then(function() {
 		generateRandomName();
 		updateBarImages();
@@ -64,9 +79,17 @@ $(document).on('click', '#generate-button-clicked', function() {
         console.log('data: ', data);
 
 //		MIDIjs.play('../outputs/live/livesong.mid');
-//		MIDIjs.get_duration('../outputs/live/livesong.mid', function(seconds) { $('#total-time').text('/' + seconds);});
+//		MIDIjs.get_duration('../outputs/live/livesong.mid', function(seconds) {
+//			var totalTime = Math.round(seconds);
+//			var totalTimeToDisplay = ' / 00:' + totalTime;
+//			$('#total-time').text(totalTimeToDisplay);
+//		});
 		MIDIjs.play('http://127.0.0.1:8887/livesong.mid');
-		MIDIjs.get_duration('http://127.0.0.1:8887/livesong.mid', function(seconds) { $('#total-time').text('/' + seconds);});
+		MIDIjs.get_duration('http://127.0.0.1:8887/livesong.mid', function(seconds) {
+			var totalTime = Math.round(seconds);
+			var totalTimeToDisplay = ' / 00:' + totalTime;
+			$('#total-time').text(totalTimeToDisplay);
+		});
     }).then(function() {
 		generateRandomName();
 		updateBarImages();

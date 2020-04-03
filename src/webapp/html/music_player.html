@@ -5,6 +5,7 @@
   <title>Generate music</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="../css/music_player.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
@@ -30,7 +31,9 @@
       <div id="controls">
         <div class="slider-controls">
           <div class="sliders-header">Music Controls
-            <span class="sliders-tooltip">These sliders control the music. The top one has the most influence, the bottom has the least. Changing these could override your search term above!</span>
+              <i id="sliders-header-tooltip" class="fa fas fa-info">
+                <span class="sliders-tooltip">These sliders control the music. The top one has the most influence, the bottom has the least. Changing these could override your search term above!</span>
+              </i>
           </div>
           <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-1">
           <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-2">
@@ -97,12 +100,12 @@
         </div>
         <div class="config-controls">
           <div class="config-option">
-            <label class="left config-toggle-label">White with black</label>
+            <label class="left config-toggle-label">Black notes</label>
             <label class="switch">
               <input id="image-colour-toggle" type="checkbox">
               <span class="toggle round"></span>
             </label>
-            <label class="right config-toggle-label">Black with white</label>
+            <label class="right config-toggle-label">White notes</label>
           </div>
           <div class="config-option">
             <label class="left config-toggle-label">Note density</label>
