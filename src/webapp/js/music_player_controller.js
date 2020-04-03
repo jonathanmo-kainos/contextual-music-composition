@@ -1,10 +1,13 @@
 $(document).ready(function() {
-    MIDIjs.initAll();
+	MIDIjs.player_callback = displayTime;
+	function displayTime(playerEvent) {
+		$('#current-time').text(Math.floor(playerEvent.time));
+	};
 });
 
 var userInput = '';
 var instrumentNumber = 0;
-var displaySheetMusic = false;
+var blackWithWhite = false;
 var noteCertainty = 99.9;
 var noteLength = 50;
 var tempo = 1;
@@ -13,14 +16,22 @@ var sliderValues = [];
 $('#generate-button').one('click', function() {
 	userInput = $('#user-input').val();
 
+	MIDIjs.stop();
+
 	console.log('userInput: ', userInput);
 
     $.get('/generateRandomMusic', {userInput: userInput}, function(data) {
         console.log('data: ', data);
         setSliderValues(data);
 
-		MIDIjs.play('../outputs/live/livesong.mid');
-    });
+//		MIDIjs.play('../outputs/live/livesong.mid');
+//		MIDIjs.get_duration('../outputs/live/livesong.mid', function(seconds) { $('#total-time').text('/' + seconds);});
+		MIDIjs.play('http://127.0.0.1:8887/livesong.mid');
+		MIDIjs.get_duration('http://127.0.0.1:8887/livesong.mid', function(seconds) { $('#total-time').text('/' + Math.round(seconds));});
+    }).then(function() {
+		generateRandomName();
+		updateBarImages();
+    });;
     $('#generate-button').prop('id', 'generate-button-clicked');
     return false;
 });
@@ -30,12 +41,14 @@ $(document).on('click', '#generate-button-clicked', function() {
 	noteCertainty = (100 - $('#density-slider').val());
 	noteLength = $('#length-slider').val();
 	tempo = $('#tempo-slider').val();
-	displaySheetMusic = $('#music-display-toggle').is(":checked");
+	blackWithWhite = $('#image-colour-toggle').is(":checked");
 	sliderValues = getSliderValues();
+
+	MIDIjs.stop();
 
 	console.log('userInput: ', userInput);
 	console.log('instrumentNumber: ', instrumentNumber);
-	console.log('displaySheetMusic: ', displaySheetMusic);
+	console.log('blackWithWhite: ', blackWithWhite);
 	console.log('noteCertainty: ', noteCertainty);
 	console.log('noteLength: ', noteLength);
 	console.log('tempo: ', tempo);
@@ -43,14 +56,20 @@ $(document).on('click', '#generate-button-clicked', function() {
     $.get('/generateSpecifiedMusic', {
             userInput: userInput,
             instrumentNumber: instrumentNumber,
-            displaySheetMusic: displaySheetMusic,
+            blackWithWhite: blackWithWhite,
             noteCertainty: noteCertainty,
             noteLength: noteLength,
             tempo: tempo,
             sliderValues: sliderValues}, function(data) {
         console.log('data: ', data);
 
-		MIDIjs.play('../outputs/live/livesong.mid');
+//		MIDIjs.play('../outputs/live/livesong.mid');
+//		MIDIjs.get_duration('../outputs/live/livesong.mid', function(seconds) { $('#total-time').text('/' + seconds);});
+		MIDIjs.play('http://127.0.0.1:8887/livesong.mid');
+		MIDIjs.get_duration('http://127.0.0.1:8887/livesong.mid', function(seconds) { $('#total-time').text('/' + seconds);});
+    }).then(function() {
+		generateRandomName();
+		updateBarImages();
     });
     return false;
 });
@@ -79,4 +98,29 @@ function setSliderValues(valuesArray) {
 		$('#slider-' + i).prop('step', valuesArray[i-1].incrementValue);
 	}
 	console.log('valuesArray: ', valuesArray);
+}
+
+$(".play-pause-button").click(function() {
+    $(".play-pause-button").toggleClass("playing");
+    if ($(".play-pause-button").hasClass("playing")) {
+		MIDIjs.resume();
+    } else {
+		MIDIjs.pause();
+    }
+});
+
+function generateRandomName() {
+	var name = generateName();
+	var exclamation = generateExclamation();
+
+    $('#song-name').text(name);
+    $('#song-exclamation').text(exclamation);
+}
+
+function updateBarImages() {
+	d = new Date();
+	for(i = 1; i < 17; i++) {
+		$("#bar-" + i).attr("src","http://127.0.0.1:8887/" + (i-1) + ".png?"+d.getTime());
+//		$("#bar-" + i).attr("src","../outputs/live/" + (i-1) + ".png?"+d.getTime());
+	}
 }
