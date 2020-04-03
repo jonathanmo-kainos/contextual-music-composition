@@ -4,7 +4,7 @@ from random import uniform
 import enums
 import objects.PCASliderComponent
 
-NUM_PCA_COMPONENTS = 20
+NUM_PCA_COMPONENTS = 10
 
 
 def convert_pca_components_to_random_decoder_input(name):

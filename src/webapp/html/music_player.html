@@ -5,6 +5,7 @@
   <title>Generate music</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="../css/music_player.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
@@ -27,10 +28,12 @@
           <button type="button" id="generate-button" class="btn btn-primary generate-music-button main-btn">Generate music!</button>
         </div>
       </div>
-      <div class="controls">
+      <div id="controls">
         <div class="slider-controls">
           <div class="sliders-header">Music Controls
-            <span class="sliders-tooltip">These sliders control the music. The top one has the most influence, the bottom has the least. Changing these could override your search term above!</span>
+              <i id="sliders-header-tooltip" class="fa fas fa-info">
+                <span class="sliders-tooltip">These sliders control the music. The top one has the most influence, the bottom has the least. Changing these could override your search term above!</span>
+              </i>
           </div>
           <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-1">
           <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-2">
@@ -43,15 +46,66 @@
           <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-9">
           <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-10">
         </div>
-        <div class="music-player"></div>
+        <div class="music-player">
+          <div class="music-player-controls">
+            <div id="song-exclamation"></div>
+            <div id="song-name"></div>
+<!--            <div id="music-display">-->
+<!--              <div id="first-bar-row">-->
+<!--                <img src="../../../outputs/live/0.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/1.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/2.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/3.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/4.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/5.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/6.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/7.png" width="11.5%">-->
+<!--              </div>-->
+<!--              <div id="second-bar-row">-->
+<!--                <img src="../../../outputs/live/8.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/9.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/10.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/11.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/12.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/13.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/14.png" width="11.5%">-->
+<!--                <img src="../../../outputs/live/15.png" width="11.5%">-->
+<!--              </div>-->
+<!--            </div>-->
+            <div id="music-display">
+              <div id="first-bar-row">
+                <img id="bar-1" src="http://127.0.0.1:8887/0.png" width="11.5%">
+                <img id="bar-2" src="http://127.0.0.1:8887/1.png" width="11.5%">
+                <img id="bar-3" src="http://127.0.0.1:8887/2.png" width="11.5%">
+                <img id="bar-4" src="http://127.0.0.1:8887/3.png" width="11.5%">
+                <img id="bar-5" src="http://127.0.0.1:8887/4.png" width="11.5%">
+                <img id="bar-6" src="http://127.0.0.1:8887/5.png" width="11.5%">
+                <img id="bar-7" src="http://127.0.0.1:8887/6.png" width="11.5%">
+                <img id="bar-8" src="http://127.0.0.1:8887/7.png" width="11.5%">
+              </div>
+              <div id="second-bar-row">
+                <img id="bar-9" src="http://127.0.0.1:8887/8.png" width="11.5%">
+                <img id="bar-10" src="http://127.0.0.1:8887/9.png" width="11.5%">
+                <img id="bar-11" src="http://127.0.0.1:8887/10.png" width="11.5%">
+                <img id="bar-12" src="http://127.0.0.1:8887/11.png" width="11.5%">
+                <img id="bar-13" src="http://127.0.0.1:8887/12.png" width="11.5%">
+                <img id="bar-14" src="http://127.0.0.1:8887/13.png" width="11.5%">
+                <img id="bar-15" src="http://127.0.0.1:8887/14.png" width="11.5%">
+                <img id="bar-16" src="http://127.0.0.1:8887/15.png" width="11.5%">
+              </div>
+            </div>
+            <button class="play-pause-button playing"></button>
+            <div class="time-info">MIDIjs audio time (s): <span id="current-time"></span><span id="total-time"></span></div>
+          </div>
+        </div>
         <div class="config-controls">
           <div class="config-option">
-            <label class="left config-toggle-label">Note position</label>
+            <label class="left config-toggle-label">Black notes</label>
             <label class="switch">
-              <input id="music-display-toggle" type="checkbox">
+              <input id="image-colour-toggle" type="checkbox">
               <span class="toggle round"></span>
             </label>
-            <label class="right config-toggle-label">Sheet music</label>
+            <label class="right config-toggle-label">White notes</label>
           </div>
           <div class="config-option">
             <label class="left config-toggle-label">Note density</label>
@@ -59,7 +113,7 @@
           </div>
           <div class="config-option">
             <label class="left config-toggle-label">Note length</label>
-            <input id="length-slider" type="range" min="5" max="500" value="50" class="slider config-slider">
+            <input id="length-slider" type="range" min="1" max="100" value="50" class="slider config-slider">
           </div>
           <div class="config-option">
             <label class="left config-toggle-label">Tempo</label>
@@ -285,6 +339,7 @@
     </div>
   </div>
 
+  <script src="../js/name_generator.js" charset="utf-8"></script>
   <script src="../js/animation_controller.js" charset="utf-8"></script>
   <script src="../js/music_player_controller.js" charset="utf-8"></script>
 </body>

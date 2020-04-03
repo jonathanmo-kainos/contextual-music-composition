@@ -76,10 +76,8 @@ $('#generate-button').click(function() {
 	homeToMain.to($('.wave-container'), 1, {yPercent: 40, ease: Power2.easeInOut}, 0)
 
 	// Show controls
-	homeToMain.fromTo($('.slider-controls'), 0.8, {opacity: 0, yPercent: 10, display: 'none', x: 0},
-										{opacity: 1, x: 0, yPercent: 0, display: 'block', ease: Power2.easeInOut}, 1)
-	homeToMain.fromTo($('.config-controls'), 0.8, {opacity: 0, yPercent: 10, display: 'none', x: 0},
-										{opacity: 1, x: 0, yPercent: 0, display: 'block', ease: Power2.easeInOut}, 1)
+	homeToMain.fromTo($('#controls'), 0.8, {opacity: 0, yPercent: 10, display: 'none', x: 0},
+										{opacity: 1, x: 0, yPercent: 0, display: 'flex', ease: Power2.easeInOut}, 1)
 });
 
 // ===== Back Button Activate =====
