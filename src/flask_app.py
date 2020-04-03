@@ -3,6 +3,7 @@ import json
 import model_output
 import enums
 import objects.PCASliderComponent
+import input_validator
 
 app = Flask(__name__,
             static_url_path='',
@@ -13,7 +14,9 @@ app = Flask(__name__,
 def generate_random_music():
     user_input_text = request.args.get('userInput')
 
-    slider_components = model_output.generate_random_song(user_input_text)
+    user_input = input_validator.validate_text(user_input_text)
+
+    slider_components = model_output.generate_random_song(user_input)
 
     first_10_slider_components_serialised = []
     for i in range(10):
@@ -25,14 +28,16 @@ def generate_random_music():
 @app.route("/generateSpecifiedMusic", methods=['GET'])
 def generate_specified_music():
     user_input_text = request.args.get('userInput')
-    display_sheet_music = request.args.get('displaySheetMusic')
+    black_with_white = request.args.get('blackWithWhite')
     instrument_number = request.args.get('instrumentNumber')
     note_length = request.args.get('noteLength')
     note_certainty = request.args.get('noteCertainty')
     tempo = request.args.get('tempo')
     slider_values = json.loads(request.args.get('sliderValues'))
 
-    model_output.generate_user_context_song(user_input_text, display_sheet_music, instrument_number, note_length, note_certainty, tempo, slider_values)
+    user_input = input_validator.validate_user_input(user_input_text, black_with_white, instrument_number, note_length, note_certainty, tempo, slider_values)
+
+    model_output.generate_user_context_song(user_input)
 
     return send_file(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
 

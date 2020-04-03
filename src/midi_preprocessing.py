@@ -1,5 +1,4 @@
 from mido import MidiFile, Message, MidiTrack
-from midi2audio import FluidSynth
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.cm as cm
@@ -136,14 +135,18 @@ def midi_to_samples(midi_file_name):
     return song_bars
 
 
-def samples_to_midi(samples, instrument_number, note_length, song_name, certainty_for_note_to_be_played):
-    boolean_matrix = samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_played)
+def samples_to_midi(samples, instrument_number, note_length, black_with_white, song_name, certainty_for_note_to_be_played):
+    boolean_matrix = samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_for_note_to_be_played)
     boolean_matrix_to_midi(boolean_matrix, instrument_number, note_length, song_name)
 
 
-def samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_played):
+def samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_for_note_to_be_played):
     output_midi_array = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
     output_midi_array_image = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
+    if black_with_white:
+        cmap = cm.gray
+    else:
+        cmap = cm.binary
     if enums.EnvVars.DEBUG_MODE:
         output_directory = '../outputs/' + song_name
     else:
@@ -159,7 +162,7 @@ def samples_to_boolean_matrix(samples, song_name, certainty_for_note_to_be_playe
                 if samples[0, bar_index, note_index, tick_index] > upper_quartile_certainty:
                     output_midi_array[bar_index, note_index, tick_index] = True
                     output_midi_array_image[bar_index, ((number_of_notes - 1) - note_index), tick_index] = True
-        plt.imsave(output_directory + '/' + str(bar_index) + '.png', output_midi_array_image[bar_index], cmap=cm.gray)
+        plt.imsave(output_directory + '/' + str(bar_index) + '.png', output_midi_array_image[bar_index], cmap=cmap)
 
     return output_midi_array
 
@@ -190,8 +193,8 @@ def boolean_matrix_to_midi(boolean_matrix, instrument_number, note_length, song_
                 if boolean_matrix[bar_index, note_index, sample_index]:
                     delta_time = calculate_delta_time(sample_index, bar_index, previous_message_sample_index, previous_message_bar_index, ticks_per_sample)
 
-                    track.append(Message(note_on, note=note_index + 16, velocity=100, time=delta_time))
-                    current_note = objects.Note.define_note(note_index + 16, (sample_index + (samples_per_bar * bar_index)))
+                    track.append(Message(note_on, note=note_index, velocity=100, time=delta_time))
+                    current_note = objects.Note.define_note(note_index, (sample_index + (samples_per_bar * bar_index)))
                     previous_message_sample_index = sample_index
                     previous_message_bar_index = bar_index
 
@@ -203,12 +206,6 @@ def boolean_matrix_to_midi(boolean_matrix, instrument_number, note_length, song_
         mid.save('../outputs//' + song_name + '/' + song_name + '.mid')
     else:
         mid.save(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
-        # using the default sound font in 44100 Hz sample rate
-        # fs = FluidSynth()
-        # fs.midi_to_audio(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid', enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.wav')
-        #
-        # # FLAC, a lossless codec, is supported as well (and recommended to be used)
-        # fs.midi_to_audio(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid', enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.flac')
 
 
 def calculate_delta_time(sample_index, bar_index, previous_message_sample_index, previous_message_bar_index, ticks_per_sample):

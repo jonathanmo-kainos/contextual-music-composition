@@ -1,21 +1,30 @@
 import objects.UserInput
 
 
-def validate_user_input(text, instrument_number, note_length, note_certainty, note_speed, slider_values):
+def validate_user_input(text, black_with_white, instrument_number, note_length, note_certainty, note_speed, slider_values):
     text = validate_text(text)
+    black_with_white = validate_black_with_white(black_with_white)
     instrument_number = validate_instrument_number(instrument_number)
     note_certainty = validate_note_certainty(note_certainty)
     note_speed = validate_note_speed(note_speed)
     note_length = validate_note_length(note_length)
     slider_values = validate_slider_values(slider_values)
 
-    return objects.UserInput.define_user_input(text, instrument_number, note_certainty, note_speed, note_length, slider_values)
+    return objects.UserInput.define_user_input(text, black_with_white, instrument_number, note_certainty, note_speed, note_length, slider_values)
 
 
 def validate_text(text):
     if not text or type(text) is not str:
         text = ''
     return text
+
+
+def validate_black_with_white(black_with_white):
+    if not black_with_white or black_with_white == 'false':
+        black_with_white = False
+    else:
+        black_with_white = True
+    return black_with_white
 
 
 def validate_instrument_number(instrument_number):
