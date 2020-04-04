@@ -14,6 +14,7 @@ var blackWithWhite = false;
 var noteCertainty = 99.9;
 var noteLength = 50;
 var playbackSpeed = 1;
+var volume = 63;
 var sliderValues = [];
 
 $('#generate-button').one('click', function() {
@@ -38,28 +39,31 @@ $('#generate-button').one('click', function() {
 
 $(document).on('click', '#generate-button-clicked', function() {
 	userInput = $('#user-input').val();
+	blackWithWhite = $('#image-colour-toggle').is(':checked');
 	noteCertainty = (100 - $('#density-slider').val());
 	noteLength = $('#length-slider').val();
 	playbackSpeed = $('#playback-speed-slider').val();
-	blackWithWhite = $('#image-colour-toggle').is(':checked');
+	volume = $('#volume-slider').val();
 	sliderValues = getSliderValues();
 
 	console.log('userInput: ', userInput);
-	console.log('instrumentNumber: ', instrumentNumber);
 	console.log('blackWithWhite: ', blackWithWhite);
 	console.log('noteCertainty: ', noteCertainty);
 	console.log('noteLength: ', noteLength);
 	console.log('playbackSpeed: ', playbackSpeed);
+	console.log('volume: ', volume);
+	console.log('instrumentNumber: ', instrumentNumber);
 
 	stopPlayback();
 
     $.get('/generateSpecifiedMusic', {
             userInput: userInput,
-            instrumentNumber: instrumentNumber,
             blackWithWhite: blackWithWhite,
             noteCertainty: noteCertainty,
             noteLength: noteLength,
             playbackSpeed: playbackSpeed,
+            volume: volume,
+            instrumentNumber: instrumentNumber,
             sliderValues: sliderValues}, function(data) {
         console.log('data: ', data);
     }).then(function() {
