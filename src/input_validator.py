@@ -1,16 +1,16 @@
 import objects.UserInput
 
 
-def validate_user_input(text, black_with_white, instrument_number, note_length, note_certainty, note_speed, slider_values):
+def validate_user_input(text, black_with_white, instrument_number, note_length, note_certainty, playback_speed, slider_values):
     text = validate_text(text)
     black_with_white = validate_black_with_white(black_with_white)
     instrument_number = validate_instrument_number(instrument_number)
     note_certainty = validate_note_certainty(note_certainty)
-    note_speed = validate_note_speed(note_speed)
+    playback_speed = validate_playback_speed(playback_speed)
     note_length = validate_note_length(note_length)
     slider_values = validate_slider_values(slider_values)
 
-    return objects.UserInput.define_user_input(text, black_with_white, instrument_number, note_certainty, note_speed, note_length, slider_values)
+    return objects.UserInput.define_user_input(text, black_with_white, instrument_number, note_certainty, playback_speed, note_length, slider_values)
 
 
 def validate_text(text):
@@ -39,10 +39,10 @@ def validate_note_certainty(note_certainty):
     return float(note_certainty)
 
 
-def validate_note_speed(note_speed):
-    if not note_speed or float(note_speed) > 5 or float(note_speed) < 0.2:
-        note_speed = 1
-    return float(note_speed)
+def validate_playback_speed(playback_speed):
+    if not playback_speed or float(playback_speed) > 5 or float(playback_speed) < 0.2:
+        playback_speed = 1
+    return float(playback_speed)
 
 
 def validate_note_length(note_length):

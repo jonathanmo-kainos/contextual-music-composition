@@ -32,10 +32,10 @@ def generate_specified_music():
     instrument_number = request.args.get('instrumentNumber')
     note_length = request.args.get('noteLength')
     note_certainty = request.args.get('noteCertainty')
-    tempo = request.args.get('tempo')
+    playback_speed = request.args.get('playbackSpeed')
     slider_values = json.loads(request.args.get('sliderValues'))
 
-    user_input = input_validator.validate_user_input(user_input_text, black_with_white, instrument_number, note_length, note_certainty, tempo, slider_values)
+    user_input = input_validator.validate_user_input(user_input_text, black_with_white, instrument_number, note_length, note_certainty, playback_speed, slider_values)
 
     model_output.generate_user_context_song(user_input)
 
