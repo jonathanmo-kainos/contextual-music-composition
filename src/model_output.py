@@ -9,6 +9,7 @@ default_note_length = 50
 default_note_certainty = 99.9
 default_black_with_white = False
 default_playback_speed = 1
+default_volume = 63
 
 
 def generate_random_song(user_input_text):
@@ -20,7 +21,7 @@ def generate_random_song(user_input_text):
     song_name = 'autoencoder 2000 ' + str(random_input[0]) + ' ' + user_input_text + ' 0'
 
     samples = decoder.predict(random_input.reshape(-1, 120))
-    midi_preprocessing.samples_to_midi(samples, song_name, default_instrument, default_note_length, default_black_with_white, default_note_certainty, default_playback_speed)
+    midi_preprocessing.samples_to_midi(samples, song_name, default_instrument, default_note_length, default_black_with_white, default_note_certainty, default_playback_speed, default_volume)
     return slider_components
 
 
@@ -33,7 +34,7 @@ def generate_user_context_song(user_input):
     song_name = 'autoencoder 2000 ' + str(specified_input[0]) + ' ' + user_input.text + ' ' + str(user_input.instrument_number)
 
     samples = decoder.predict(specified_input.reshape(-1, 120))
-    midi_preprocessing.samples_to_midi(samples, song_name, user_input.instrument_number, user_input.note_length, user_input.black_with_white, user_input.note_certainty, user_input.playback_speed)
+    midi_preprocessing.samples_to_midi(samples, song_name, user_input.instrument_number, user_input.note_length, user_input.black_with_white, user_input.note_certainty, user_input.playback_speed, user_input.volume)
     return
 
 

@@ -135,9 +135,9 @@ def midi_to_samples(midi_file_name):
     return song_bars
 
 
-def samples_to_midi(samples, song_name, instrument_number, note_length, black_with_white, certainty_for_note_to_be_played, playback_speed):
+def samples_to_midi(samples, song_name, instrument_number, note_length, black_with_white, certainty_for_note_to_be_played, playback_speed, volume):
     boolean_matrix = samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_for_note_to_be_played)
-    boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_length, playback_speed)
+    boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_length, playback_speed, volume)
 
 
 def samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_for_note_to_be_played):
@@ -167,7 +167,7 @@ def samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_fo
     return output_midi_array
 
 
-def boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_length, playback_speed):
+def boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_length, playback_speed, volume):
     mid = MidiFile()
     track = MidiTrack()
     track.append(Message('program_change', program=instrument_number, time=0))
@@ -193,7 +193,7 @@ def boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_le
                 if boolean_matrix[bar_index, note_index, sample_index]:
                     delta_time = calculate_delta_time(sample_index, bar_index, previous_message_sample_index, previous_message_bar_index, ticks_per_sample)
 
-                    track.append(Message(note_on, note=note_index, velocity=100, time=delta_time))
+                    track.append(Message(note_on, note=note_index, velocity=volume, time=delta_time))
                     current_note = objects.Note.define_note(note_index, (sample_index + (samples_per_bar * bar_index)))
                     previous_message_sample_index = sample_index
                     previous_message_bar_index = bar_index
