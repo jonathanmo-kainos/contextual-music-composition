@@ -1,49 +1,31 @@
 $(document).ready(function() {
-	MIDIjs.player_callback = displayTime;
-	function displayTime(playerEvent) {
-		var timeToDisplay;
-		var currentTime = Math.floor(playerEvent.time);
-		if (currentTime < 10) {
-			timeToDisplay = '00:0' + currentTime;
-		} else {
-			timeToDisplay = '00:' + currentTime;
-		}
-		$('#current-time').text(timeToDisplay);
-	};
 });
+
+var totalTime = 0;
+var currentTime = 0;
+var isSongFinished = false;
 
 var userInput = '';
 var instrumentNumber = 0;
 var blackWithWhite = false;
 var noteCertainty = 99.9;
 var noteLength = 50;
-var tempo = 1;
+var playbackSpeed = 1;
 var sliderValues = [];
 
 $('#generate-button').one('click', function() {
 	userInput = $('#user-input').val();
-
-	MIDIjs.stop();
-
 	console.log('userInput: ', userInput);
+
+	stopPlayback();
 
     $.get('/generateRandomMusic', {userInput: userInput}, function(data) {
         console.log('data: ', data);
         setSliderValues(data);
-
-//		MIDIjs.play('../outputs/live/livesong.mid');
-//		MIDIjs.get_duration('../outputs/live/livesong.mid', function(seconds) {
-//			var totalTime = Math.round(seconds);
-//			var totalTimeToDisplay = ' / 00:' + totalTime;
-//			$('#total-time').text(totalTimeToDisplay);
-//		});
-		MIDIjs.play('http://127.0.0.1:8887/livesong.mid');
-		MIDIjs.get_duration('http://127.0.0.1:8887/livesong.mid', function(seconds) {
-			var totalTime = Math.round(seconds);
-			var totalTimeToDisplay = ' / 00:' + totalTime;
-			$('#total-time').text(totalTimeToDisplay);
-		});
     }).then(function() {
+		playSongFromUrl();
+		setSongDuration();
+        setupMidiJsTimeCounting();
 		generateRandomName();
 		updateBarImages();
     });;
@@ -55,18 +37,18 @@ $(document).on('click', '#generate-button-clicked', function() {
 	userInput = $('#user-input').val();
 	noteCertainty = (100 - $('#density-slider').val());
 	noteLength = $('#length-slider').val();
-	tempo = $('#tempo-slider').val();
-	blackWithWhite = $('#image-colour-toggle').is(":checked");
+	playbackSpeed = $('#playback-speed-slider').val();
+	blackWithWhite = $('#image-colour-toggle').is(':checked');
 	sliderValues = getSliderValues();
-
-	MIDIjs.stop();
 
 	console.log('userInput: ', userInput);
 	console.log('instrumentNumber: ', instrumentNumber);
 	console.log('blackWithWhite: ', blackWithWhite);
 	console.log('noteCertainty: ', noteCertainty);
 	console.log('noteLength: ', noteLength);
-	console.log('tempo: ', tempo);
+	console.log('playbackSpeed: ', playbackSpeed);
+
+	stopPlayback();
 
     $.get('/generateSpecifiedMusic', {
             userInput: userInput,
@@ -74,34 +56,17 @@ $(document).on('click', '#generate-button-clicked', function() {
             blackWithWhite: blackWithWhite,
             noteCertainty: noteCertainty,
             noteLength: noteLength,
-            tempo: tempo,
+            playbackSpeed: playbackSpeed,
             sliderValues: sliderValues}, function(data) {
         console.log('data: ', data);
-
-//		MIDIjs.play('../outputs/live/livesong.mid');
-//		MIDIjs.get_duration('../outputs/live/livesong.mid', function(seconds) {
-//			var totalTime = Math.round(seconds);
-//			var totalTimeToDisplay = ' / 00:' + totalTime;
-//			$('#total-time').text(totalTimeToDisplay);
-//		});
-		MIDIjs.play('http://127.0.0.1:8887/livesong.mid');
-		MIDIjs.get_duration('http://127.0.0.1:8887/livesong.mid', function(seconds) {
-			var totalTime = Math.round(seconds);
-			var totalTimeToDisplay = ' / 00:' + totalTime;
-			$('#total-time').text(totalTimeToDisplay);
-		});
     }).then(function() {
+		playSongFromUrl();
+		setSongDuration();
+        setupMidiJsTimeCounting();
 		generateRandomName();
 		updateBarImages();
     });
     return false;
-});
-
-// WATCHERS
-$('.mega-menu-column a').click(function() {
-   instrumentNumber = $(this).attr('id');
-   $("#instrument-dropdown-header").text('Instrument: ' + $(this).text());
-   console.log(instrumentNumber);
 });
 
 function getSliderValues() {
@@ -123,15 +88,6 @@ function setSliderValues(valuesArray) {
 	console.log('valuesArray: ', valuesArray);
 }
 
-$(".play-pause-button").click(function() {
-    $(".play-pause-button").toggleClass("playing");
-    if ($(".play-pause-button").hasClass("playing")) {
-		MIDIjs.resume();
-    } else {
-		MIDIjs.pause();
-    }
-});
-
 function generateRandomName() {
 	var name = generateName();
 	var exclamation = generateExclamation();
@@ -143,7 +99,89 @@ function generateRandomName() {
 function updateBarImages() {
 	d = new Date();
 	for(i = 1; i < 17; i++) {
-		$("#bar-" + i).attr("src","http://127.0.0.1:8887/" + (i-1) + ".png?"+d.getTime());
-//		$("#bar-" + i).attr("src","../outputs/live/" + (i-1) + ".png?"+d.getTime());
+		$('#bar-' + i).attr('src','http://127.0.0.1:8887/' + (i-1) + '.png?'+d.getTime());
+//		$('#bar-' + i).attr('src','../outputs/live/' + (i-1) + '.png?'+d.getTime());
 	}
+}
+
+function setSongDuration() {
+//	MIDIjs.get_duration('../outputs/live/livesong.mid', function(seconds) {
+	MIDIjs.get_duration('http://127.0.0.1:8887/livesong.mid', function(seconds) {
+		totalTime = Math.round(seconds);
+		$('#total-time').text(' / ' + convertSecondsToMinutes(totalTime));
+	});
+}
+
+function playSongFromUrl() {
+//	MIDIjs.play('../outputs/live/livesong.mid');
+    $('.play-pause-button').addClass('playing');
+	MIDIjs.play('http://127.0.0.1:8887/livesong.mid');
+}
+
+function stopPlayback() {
+	MIDIjs.stop();
+    $('.play-pause-button').removeClass('playing');
+}
+
+function setupMidiJsTimeCounting() {
+	MIDIjs.player_callback = displayTime;
+	function displayTime(playerEvent) {
+	console.log('displaytime');
+		currentTime = Math.floor(playerEvent.time);
+		if (currentTime == totalTime) {
+			currentTime = 0;
+			MIDIjs.stop();
+			isSongFinished = true;
+            $('.play-pause-button').removeClass('playing');
+		}
+		$('#current-time').text(convertSecondsToMinutes(currentTime));
+	}
+}
+
+// WATCHERS
+$('.mega-menu-column a').click(function() {
+   instrumentNumber = $(this).attr('id');
+   $('#instrument-dropdown-header').text('Instrument: ' + $(this).text());
+   console.log(instrumentNumber);
+});
+
+$('.play-pause-button').click(function() {
+    $('.play-pause-button').toggleClass('playing');
+    if ($('.play-pause-button').hasClass('playing')) {
+        if (isSongFinished) {
+            playSongFromUrl();
+            isSongFinished = false;
+        } else {
+			MIDIjs.resume();
+		}
+    } else {
+		MIDIjs.pause();
+    }
+});
+
+//$('#loop-song').click(function() {
+//    $('.play-pause-button').toggleClass('playing');
+//    if ($('.play-pause-button').hasClass('playing')) {
+//        if (isSongFinished) {
+//            playSongFromUrl();
+//            isSongFinished = false;
+//        } else {
+//			MIDIjs.resume();
+//		}
+//    } else {
+//		MIDIjs.pause();
+//    }
+//});
+
+// HELPER METHODS
+function convertSecondsToMinutes(currentTimeInSeconds) {
+	var timeToDisplay = '';
+	var hours = Math.floor(currentTimeInSeconds / 3600);
+	if (hours > 0) {
+		timeToDisplay = hours + ':';
+	}
+    currentTimeInSeconds -= hours * 3600;
+    var minutes = Math.floor(currentTimeInSeconds / 60);
+    currentTimeInSeconds -= minutes * 60;
+    return timeToDisplay + (minutes < 10 ? '0' + minutes : minutes) + ':' + (currentTimeInSeconds < 10 ? '0' + currentTimeInSeconds : currentTimeInSeconds);
 }

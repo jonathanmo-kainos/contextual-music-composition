@@ -52,24 +52,24 @@
             <div id="song-name"></div>
 <!--            <div id="music-display">-->
 <!--              <div id="first-bar-row">-->
-<!--                <img src="../../../outputs/live/0.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/1.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/2.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/3.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/4.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/5.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/6.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/7.png" width="11.5%">-->
+<!--                <img id="bar-1" src="../outputs/live/0.png" width="11.5%">-->
+<!--                <img id="bar-2" src="../outputs/live/1.png" width="11.5%">-->
+<!--                <img id="bar-3" src="../outputs/live/2.png" width="11.5%">-->
+<!--                <img id="bar-4" src="../outputs/live/3.png" width="11.5%">-->
+<!--                <img id="bar-5" src="../outputs/live/4.png" width="11.5%">-->
+<!--                <img id="bar-6" src="../outputs/live/5.png" width="11.5%">-->
+<!--                <img id="bar-7" src="../outputs/live/6.png" width="11.5%">-->
+<!--                <img id="bar-8" src="../outputs/live/7.png" width="11.5%">-->
 <!--              </div>-->
 <!--              <div id="second-bar-row">-->
-<!--                <img src="../../../outputs/live/8.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/9.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/10.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/11.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/12.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/13.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/14.png" width="11.5%">-->
-<!--                <img src="../../../outputs/live/15.png" width="11.5%">-->
+<!--                <img id="bar-9" src="../outputs/live/8.png" width="11.5%">-->
+<!--                <img id="bar-10" src="../outputs/live/9.png" width="11.5%">-->
+<!--                <img id="bar-11" src="../outputs/live/10.png" width="11.5%">-->
+<!--                <img id="bar-12" src="../outputs/live/11.png" width="11.5%">-->
+<!--                <img id="bar-13" src="../outputs/live/12.png" width="11.5%">-->
+<!--                <img id="bar-14" src="../outputs/live/13.png" width="11.5%">-->
+<!--                <img id="bar-15" src="../outputs/live/14.png" width="11.5%">-->
+<!--                <img id="bar-16" src="../outputs/live/15.png" width="11.5%">-->
 <!--              </div>-->
 <!--            </div>-->
             <div id="music-display">
@@ -95,6 +95,7 @@
               </div>
             </div>
             <button class="play-pause-button playing"></button>
+<!--            <i id="loop-song" class="fa fa-repeat" aria-hidden="true"></i>-->
             <div class="time-info">MIDIjs audio time (s): <span id="current-time"></span><span id="total-time"></span></div>
           </div>
         </div>
@@ -117,7 +118,7 @@
           </div>
           <div class="config-option">
             <label class="left config-toggle-label">Tempo</label>
-            <input id="tempo-slider" type="range" min="0.2" max="5" value="1" step="0.1" class="slider config-slider">
+            <input id="playback-speed-slider" type="range" min="0.2" max="5" value="1" step="0.1" class="slider config-slider">
           </div>
           <div class="config-option">
             <li class="dropdown">
