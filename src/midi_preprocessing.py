@@ -135,9 +135,9 @@ def midi_to_samples(midi_file_name):
     return song_bars
 
 
-def samples_to_midi(samples, instrument_number, note_length, black_with_white, song_name, certainty_for_note_to_be_played):
+def samples_to_midi(samples, song_name, instrument_number, note_length, black_with_white, certainty_for_note_to_be_played, playback_speed):
     boolean_matrix = samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_for_note_to_be_played)
-    boolean_matrix_to_midi(boolean_matrix, instrument_number, note_length, song_name)
+    boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_length, playback_speed)
 
 
 def samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_for_note_to_be_played):
@@ -167,12 +167,12 @@ def samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_fo
     return output_midi_array
 
 
-def boolean_matrix_to_midi(boolean_matrix, instrument_number, note_length, song_name):
+def boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_length, playback_speed):
     mid = MidiFile()
     track = MidiTrack()
     track.append(Message('program_change', program=instrument_number, time=0))
 
-    ticks_per_sample = int(round(((mid.ticks_per_beat * default_beats_per_bar) / samples_per_bar)))
+    ticks_per_sample = int(round((((mid.ticks_per_beat / playback_speed) * default_beats_per_bar) / samples_per_bar)))
 
     notes_to_turn_off = []
 
