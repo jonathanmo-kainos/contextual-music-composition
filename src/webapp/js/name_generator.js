@@ -21,7 +21,7 @@ function generateName() {
 }
 
 function generateExclamation() {
-	var exclamations = ["Wow!","It's beautiful!","Truly wonderful!","It brings a tear to my eye!","A masterpiece!","This should be in the charts!","*GASP*!","Get my producer on the phone!","New club anthem?","Keep this on repeat!","This gives me goosebumps!"];
+	var exclamations = ["Wow!","Inspiring!","It's beautiful!","Truly wonderful!","It brings a tear to my eye!","A masterpiece!","This should be in the charts!","*GASP*!","Get my producer on the phone!","New club anthem?","Keep this on repeat!","This gives me goosebumps!","Everyone needs to hear this!"];
 
 	var exclamation = exclamations[getRandomInt(0, exclamations.length)] + ' Let\'s call it...';
 	return exclamation;
