@@ -4,7 +4,10 @@ $(document).ready(function() {
 var totalTime = 0;
 var currentTime = 0;
 var isSongFinished = false;
+var loopSong = true;
+var playbackStopped = false;
 
+// USER INPUTS
 var userInput = '';
 var instrumentNumber = 0;
 var blackWithWhite = false;
@@ -99,11 +102,12 @@ function generateRandomName() {
 function updateBarImages() {
 	d = new Date();
 	for(i = 1; i < 17; i++) {
-		$('#bar-' + i).attr('src','http://127.0.0.1:8887/' + (i-1) + '.png?'+d.getTime());
 //		$('#bar-' + i).attr('src','../outputs/live/' + (i-1) + '.png?'+d.getTime());
+		$('#bar-' + i).attr('src','http://127.0.0.1:8887/' + (i-1) + '.png?'+d.getTime());
 	}
 }
 
+// MUSIC CONTROL FUNCTIONS
 function setSongDuration() {
 //	MIDIjs.get_duration('../outputs/live/livesong.mid', function(seconds) {
 	MIDIjs.get_duration('http://127.0.0.1:8887/livesong.mid', function(seconds) {
@@ -114,13 +118,22 @@ function setSongDuration() {
 
 function playSongFromUrl() {
 //	MIDIjs.play('../outputs/live/livesong.mid');
-    $('.play-pause-button').addClass('playing');
 	MIDIjs.play('http://127.0.0.1:8887/livesong.mid');
+    $('.play-pause-button').addClass('playing');
+    isSongFinished = false;
+    playbackStopped = false;
 }
 
 function stopPlayback() {
 	MIDIjs.stop();
+	playbackStopped = true;
     $('.play-pause-button').removeClass('playing');
+    console.log('loopssong: ', loopSong);
+    console.log('songifniishd: ', isSongFinished);
+	if (isSongFinished && loopSong) {
+		console.log('looping');
+		playSongFromUrl();
+	}
 }
 
 function setupMidiJsTimeCounting() {
@@ -128,13 +141,14 @@ function setupMidiJsTimeCounting() {
 	function displayTime(playerEvent) {
 	console.log('displaytime');
 		currentTime = Math.floor(playerEvent.time);
-		if (currentTime == totalTime) {
+		if (currentTime == totalTime && !isSongFinished) {
 			currentTime = 0;
-			MIDIjs.stop();
 			isSongFinished = true;
-            $('.play-pause-button').removeClass('playing');
 		}
 		$('#current-time').text(convertSecondsToMinutes(currentTime));
+		if (isSongFinished && !playbackStopped) {
+			stopPlayback();
+		}
 	}
 }
 
@@ -159,19 +173,11 @@ $('.play-pause-button').click(function() {
     }
 });
 
-//$('#loop-song').click(function() {
-//    $('.play-pause-button').toggleClass('playing');
-//    if ($('.play-pause-button').hasClass('playing')) {
-//        if (isSongFinished) {
-//            playSongFromUrl();
-//            isSongFinished = false;
-//        } else {
-//			MIDIjs.resume();
-//		}
-//    } else {
-//		MIDIjs.pause();
-//    }
-//});
+$('#loop-song').click(function() {
+    $('#loop-song').toggleClass('looping');
+    loopSong = $('#loop-song').hasClass('looping');
+    console.log('loopsong: ', loopSong);
+});
 
 // HELPER METHODS
 function convertSecondsToMinutes(currentTimeInSeconds) {

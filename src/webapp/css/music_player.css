@@ -893,6 +893,8 @@ input:checked + .toggle:before {
 }
 
 .play-pause-button {
+	padding: 0;
+	margin-left: 3%;
   border: 0;
   background: transparent;
   box-sizing: border-box;
@@ -940,4 +942,38 @@ input:checked + .toggle:before {
 
 #music-display {
 	padding-bottom: 3%;
+}
+
+#music-controls {
+	display: flex;
+}
+
+#loop-song {
+	font-size: 2em;
+}
+
+#loop-song:hover {
+  color: #404040;
+  cursor: pointer;
+}
+
+.looping {
+	color: green;
+}
+
+.time-info-container {
+	width: 33%;
+	text-align: left;
+	padding-left: 2vw;
+}
+
+.play-pause-container {
+	width: 33%;
+	text-align: center;
+}
+
+.loop-button-container {
+	width: 33%;
+	text-align: right;
+	padding-right: 2vw;
 }
