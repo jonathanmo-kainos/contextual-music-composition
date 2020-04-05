@@ -84,7 +84,6 @@ function getPcaSliderComponents() {
 }
 
 function setSliderValues(sliderComponents) {
-	pcaSliderComponents = []
 	pcaSliderComponents = sliderComponents;
 //	for (i = 0; i < sliderComponents.length; i++) {
 //		pcaSliderComponents.push(sliderComponents[i].number);
