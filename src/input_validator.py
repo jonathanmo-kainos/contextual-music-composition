@@ -1,7 +1,8 @@
 import objects.UserInput
 
 
-def validate_user_input(text, black_with_white, instrument_number, note_length, note_certainty, playback_speed, volume, slider_values):
+def validate_user_input(text, black_with_white, instrument_number, note_length, note_certainty, playback_speed, volume,
+                        randomise_on_screen_sliders, randomise_off_screen_sliders, pca_slider_components):
     text = validate_text(text)
     black_with_white = validate_black_with_white(black_with_white)
     instrument_number = validate_instrument_number(instrument_number)
@@ -9,9 +10,13 @@ def validate_user_input(text, black_with_white, instrument_number, note_length, 
     playback_speed = validate_playback_speed(playback_speed)
     volume = validate_volume(volume)
     note_length = validate_note_length(note_length)
-    slider_values = validate_slider_values(slider_values)
+    randomise_on_screen_sliders = validate_randomise_on_screen_sliders(randomise_on_screen_sliders)
+    randomise_off_screen_sliders = validate_randomise_off_screen_sliders(randomise_off_screen_sliders)
+    pca_slider_components = validate_pca_slider_components(pca_slider_components)
 
-    return objects.UserInput.define_user_input(text, black_with_white, instrument_number, note_certainty, playback_speed, volume, note_length, slider_values)
+    return objects.UserInput.define_user_input(text, black_with_white, instrument_number, note_certainty,
+                                               playback_speed, volume, note_length, randomise_on_screen_sliders,
+                                               randomise_off_screen_sliders, pca_slider_components)
 
 
 def validate_text(text):
@@ -58,14 +63,30 @@ def validate_note_length(note_length):
     return int(note_length)
 
 
-def validate_slider_values(slider_values):
-    validated_slider_values = []
+def validate_randomise_on_screen_sliders(randomise_on_screen_sliders):
+    if not randomise_on_screen_sliders or randomise_on_screen_sliders == 'false':
+        randomise_on_screen_sliders = False
+    else:
+        randomise_on_screen_sliders = True
+    return randomise_on_screen_sliders
 
-    if not slider_values or len(slider_values) != 10:
+
+def validate_randomise_off_screen_sliders(randomise_off_screen_sliders):
+    if not randomise_off_screen_sliders or randomise_off_screen_sliders == 'false':
+        randomise_off_screen_sliders = False
+    else:
+        randomise_off_screen_sliders = True
+    return randomise_off_screen_sliders
+
+
+def validate_pca_slider_components(pca_slider_components):
+    validated_pca_slider_components = []
+
+    if not pca_slider_components:
         return []
-    for slider_value in slider_values:
-        if float(slider_value) < -1000 or float(slider_value) > 1000:
+    for slider_component in pca_slider_components:
+        if float(slider_component.number) < -1000 or float(slider_component.number) > 1000:
             return []
         else:
-            validated_slider_values.append(float(slider_value))
-    return validated_slider_values
+            validated_pca_slider_components.append(slider_component)
+    return validated_pca_slider_components

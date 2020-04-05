@@ -6,9 +6,12 @@ class UserInput(object):
     playback_speed = 1
     volume = 1
     note_length = 50
-    slider_values = []
+    randomise_on_screen_sliders = True
+    randomise_off_screen_sliders = True
+    pca_slider_components = []
 
-    def __init__(self, text, black_with_white, instrument_number, note_certainty, playback_speed, volume, note_length, slider_values):
+    def __init__(self, text, black_with_white, instrument_number, note_certainty, playback_speed, volume, note_length,
+                 randomise_on_screen_sliders, randomise_off_screen_sliders, pca_slider_components):
         self.text = text
         self.black_with_white = black_with_white
         self.instrument_number = instrument_number
@@ -16,8 +19,12 @@ class UserInput(object):
         self.playback_speed = playback_speed
         self.volume = volume
         self.note_length = note_length
-        self.slider_values = slider_values
+        self.randomise_on_screen_sliders = randomise_on_screen_sliders
+        self.randomise_off_screen_sliders = randomise_off_screen_sliders
+        self.pca_slider_components = pca_slider_components
 
 
-def define_user_input(text, black_with_white, instrument_number, note_certainty, playback_speed, volume, note_length, slider_values):
-    return UserInput(text, black_with_white, instrument_number, note_certainty, playback_speed, volume, note_length, slider_values)
+def define_user_input(text, black_with_white, instrument_number, note_certainty, playback_speed, volume, note_length,
+                      randomise_on_screen_sliders, randomise_off_screen_sliders, pca_slider_components):
+    return UserInput(text, black_with_white, instrument_number, note_certainty, playback_speed, volume, note_length,
+                     randomise_on_screen_sliders, randomise_off_screen_sliders, pca_slider_components)

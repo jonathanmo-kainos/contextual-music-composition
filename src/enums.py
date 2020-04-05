@@ -1,7 +1,7 @@
 class EnvVars:
     # ENVIRONMENT VARIABLES
     DEBUG_MODE = False
-    LOCAL_MODE = True
+    LOCAL_MODE = False
 
     # HOME DIRECTORY
     PROD_HOME_DIRECTORY = '/home/jonnymoore/contextual-music-composition/'

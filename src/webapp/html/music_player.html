@@ -9,7 +9,7 @@
   <link rel="stylesheet" type="text/css" href="../css/music_player.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
-  <script type='text/javascript' src='http://www.midijs.net/lib/midi.js'></script>
+  <script type='text/javascript' src='//www.midijs.net/lib/midi.js'></script>
   <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 </head>
 <body>
@@ -34,6 +34,16 @@
               <i id="sliders-header-tooltip" class="fa fas fa-info">
                 <span class="sliders-tooltip">These sliders control the music. The top one has the most influence, the bottom has the least. Changing these could override your search term above!</span>
               </i>
+          </div>
+          <div id="randomise-controls">
+            <div class="randomise-config-group">
+              <label id="randomise-on-screen-sliders-label" class="randomise-config" for="randomise-on-screen-sliders">Randomise on screen sliders </label>
+              <input type="checkbox" id="randomise-on-screen-sliders" name="randomise-on-screen-sliders" checked>
+            </div>
+            <div class="randomise-config-group">
+              <label id="randomise-off-screen-sliders-label" class="randomise-config" for="randomise-off-screen-sliders">Randomise off screen sliders </label>
+              <input type="checkbox" id="randomise-off-screen-sliders" name="randomise-off-screen-sliders" checked>
+            </div>
           </div>
           <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-1">
           <input type="range" min="-1000" max="1000" value="0" step="1" class="slider" id="slider-2">

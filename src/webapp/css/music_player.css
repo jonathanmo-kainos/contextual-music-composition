@@ -668,6 +668,7 @@ body {
 }
 
 .config-controls {
+	text-align: right;
 	margin: 5vh 2vw 5vh 0vw;
     width: 20%;
 }
@@ -814,7 +815,7 @@ input:checked + .toggle:before {
 }
 
 .dropdown {
-	text-align: center;
+	margin-right: 2vw;
 }
 
 .dropdown-menu {
@@ -853,9 +854,22 @@ input:checked + .toggle:before {
 
 .sliders-header {
 	text-align: left;
-	margin-left: 1vw;
+    margin: 0vw 1vw 1vw 1vw;
+    font-weight: 600;
 }
 
+#randomise-controls {
+	text-align: left;
+	margin-left: 1.5vw;
+}
+
+.randomise-config {
+	padding-right: 0.5vw;
+}
+
+.randomise-config-group {
+	white-space: nowrap;
+}
 
 #sliders-header-tooltip {
 	padding-left: 2%;
