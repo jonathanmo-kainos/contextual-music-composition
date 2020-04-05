@@ -21,7 +21,7 @@ $('#generate-button').one('click', function() {
 
 	stopPlayback();
 
-    $.get('/generateRandomMusic', {userInput: userInput}, function(data) {
+    $.post('/generateRandomMusic', {userInput: userInput}, function(data) {
         console.log('data: ', data);
         setSliderValues(data);
     }).then(function() {
@@ -30,7 +30,7 @@ $('#generate-button').one('click', function() {
         setupMidiJsTimeCounting();
 		generateRandomName();
 		updateBarImages();
-    });;
+    });
     $('#generate-button').prop('id', 'generate-button-clicked');
     return false;
 });
@@ -48,7 +48,7 @@ $(document).on('click', '#generate-button-clicked', function() {
 
 	stopPlayback();
 
-    $.get('/generateSpecifiedMusic', {
+    $.post('/generateSpecifiedMusic', {
             userInput: userInput,
             blackWithWhite: blackWithWhite,
             noteCertainty: noteCertainty,
@@ -108,8 +108,8 @@ function generateRandomName() {
 function updateBarImages() {
 	d = new Date();
 	for(i = 1; i < 17; i++) {
-//		$('#bar-' + i).attr('src','../outputs/live/' + (i-1) + '.png?'+d.getTime());
-		$('#bar-' + i).attr('src','http://127.0.0.1:8887/' + (i-1) + '.png?' + d.getTime());
+//		$('#bar-' + i).prop('src','../outputs/live/' + (i-1) + '.png?'+d.getTime());
+		$('#bar-' + i).prop('src','http://127.0.0.1:8887/' + (i-1) + '.png?' + d.getTime());
 	}
 }
 
@@ -158,7 +158,7 @@ function setupMidiJsTimeCounting() {
 
 // WATCHERS
 $('.mega-menu-column a').click(function() {
-   instrumentNumber = $(this).attr('id');
+   instrumentNumber = $(this).prop('id');
    $('#instrument-dropdown-header').text('Instrument: ' + $(this).text());
 });
 
@@ -179,6 +179,11 @@ $('.play-pause-button').click(function() {
 $('#loop-song').click(function() {
     $('#loop-song').toggleClass('looping');
     loopSong = $('#loop-song').hasClass('looping');
+});
+
+$('.music-control-slider').click(function() {
+    $('#randomise-on-screen-sliders').prop('checked', false);
+    randomiseOnScreenSliders = false;
 });
 
 // HELPER METHODS
