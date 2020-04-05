@@ -15,11 +15,12 @@ var noteCertainty = 99.9;
 var noteLength = 50;
 var playbackSpeed = 1;
 var volume = 63;
-var sliderValues = [];
+var randomiseOnScreenSliders = true;
+var randomiseOffScreenSliders = true;
+var pcaSliderComponents = [];
 
 $('#generate-button').one('click', function() {
 	userInput = $('#user-input').val();
-	console.log('userInput: ', userInput);
 
 	stopPlayback();
 
@@ -44,15 +45,9 @@ $(document).on('click', '#generate-button-clicked', function() {
 	noteLength = $('#length-slider').val();
 	playbackSpeed = $('#playback-speed-slider').val();
 	volume = $('#volume-slider').val();
-	sliderValues = getSliderValues();
-
-	console.log('userInput: ', userInput);
-	console.log('blackWithWhite: ', blackWithWhite);
-	console.log('noteCertainty: ', noteCertainty);
-	console.log('noteLength: ', noteLength);
-	console.log('playbackSpeed: ', playbackSpeed);
-	console.log('volume: ', volume);
-	console.log('instrumentNumber: ', instrumentNumber);
+	randomiseOnScreenSliders = $('#randomise-on-screen-sliders').is(':checked');
+	randomiseOffScreenSliders = $('#randomise-off-screen-sliders').is(':checked');
+	pcaSliderComponents = getPcaSliderComponents();
 
 	stopPlayback();
 
@@ -64,7 +59,10 @@ $(document).on('click', '#generate-button-clicked', function() {
             playbackSpeed: playbackSpeed,
             volume: volume,
             instrumentNumber: instrumentNumber,
-            sliderValues: sliderValues}, function(data) {
+            randomiseOnScreenSliders: randomiseOnScreenSliders,
+            randomiseOffScreenSliders: randomiseOffScreenSliders,
+            pcaSliderComponents: pcaSliderComponents}, function(data) {
+        setSliderValues(data);
         console.log('data: ', data);
     }).then(function() {
 		playSongFromUrl();
@@ -76,23 +74,28 @@ $(document).on('click', '#generate-button-clicked', function() {
     return false;
 });
 
-function getSliderValues() {
-	sliderValues = [];
-	for(i = 1; i < 11; i++) {
-		sliderValues.push($('#slider-' + i).val());
+function getPcaSliderComponents() {
+	for (i = 1; i <= 10; i++) {
+		pcaSliderComponents[i-1].number = parseFloat($('#slider-' + i).val());
+		console.log($('#slider-' + i).val());
 	}
-	console.log('sliderValues: ', sliderValues);
-	return JSON.stringify(sliderValues);
+	console.log('pcaSliderComponents: ', pcaSliderComponents.length);
+	return JSON.stringify(pcaSliderComponents);
 }
 
-function setSliderValues(valuesArray) {
-	for(i = 1; i < 11; i++) {
-		$('#slider-' + i).val(valuesArray[i-1].randomNumber);
-		$('#slider-' + i).prop('min', valuesArray[i-1].bottomLimit);
-		$('#slider-' + i).prop('max', valuesArray[i-1].topLimit);
-		$('#slider-' + i).prop('step', valuesArray[i-1].incrementValue);
+function setSliderValues(sliderComponents) {
+	pcaSliderComponents = []
+	pcaSliderComponents = sliderComponents;
+//	for (i = 0; i < sliderComponents.length; i++) {
+//		pcaSliderComponents.push(sliderComponents[i].number);
+//	}
+	for (i = 1; i <= 10; i++) {
+		$('#slider-' + i).val(sliderComponents[i-1].number);
+		$('#slider-' + i).prop('min', sliderComponents[i-1].bottomLimit);
+		$('#slider-' + i).prop('max', sliderComponents[i-1].topLimit);
+		$('#slider-' + i).prop('step', sliderComponents[i-1].incrementValue);
 	}
-	console.log('valuesArray: ', valuesArray);
+	console.log('sliderComponents: ', sliderComponents);
 }
 
 function generateRandomName() {
@@ -132,8 +135,6 @@ function stopPlayback() {
 	MIDIjs.stop();
 	playbackStopped = true;
     $('.play-pause-button').removeClass('playing');
-    console.log('loopssong: ', loopSong);
-    console.log('songifniishd: ', isSongFinished);
 	if (isSongFinished && loopSong) {
 		console.log('looping');
 		playSongFromUrl();
@@ -160,7 +161,6 @@ function setupMidiJsTimeCounting() {
 $('.mega-menu-column a').click(function() {
    instrumentNumber = $(this).attr('id');
    $('#instrument-dropdown-header').text('Instrument: ' + $(this).text());
-   console.log(instrumentNumber);
 });
 
 $('.play-pause-button').click(function() {
@@ -180,7 +180,6 @@ $('.play-pause-button').click(function() {
 $('#loop-song').click(function() {
     $('#loop-song').toggleClass('looping');
     loopSong = $('#loop-song').hasClass('looping');
-    console.log('loopsong: ', loopSong);
 });
 
 // HELPER METHODS
