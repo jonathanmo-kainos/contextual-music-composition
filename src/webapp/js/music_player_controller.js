@@ -1,6 +1,3 @@
-$(document).ready(function() {
-});
-
 var totalTime = 0;
 var currentTime = 0;
 var isSongFinished = false;
@@ -74,6 +71,12 @@ $(document).on('click', '#generate-button-clicked', function() {
     return false;
 });
 
+$(document).on('click', '#download-midi-link', function() {
+	d = new Date();
+	var currentLink = $('#download-midi-link').prop('href');
+	$('#download-midi-link').prop('href', currentLink + '?' + d.getTime());
+});
+
 function getPcaSliderComponents() {
 	for (i = 1; i <= 10; i++) {
 		pcaSliderComponents[i-1].number = parseFloat($('#slider-' + i).val());
@@ -85,9 +88,6 @@ function getPcaSliderComponents() {
 
 function setSliderValues(sliderComponents) {
 	pcaSliderComponents = sliderComponents;
-//	for (i = 0; i < sliderComponents.length; i++) {
-//		pcaSliderComponents.push(sliderComponents[i].number);
-//	}
 	for (i = 1; i <= 10; i++) {
 		$('#slider-' + i).val(sliderComponents[i-1].number);
 		$('#slider-' + i).prop('min', sliderComponents[i-1].bottomLimit);
@@ -109,7 +109,7 @@ function updateBarImages() {
 	d = new Date();
 	for(i = 1; i < 17; i++) {
 //		$('#bar-' + i).attr('src','../outputs/live/' + (i-1) + '.png?'+d.getTime());
-		$('#bar-' + i).attr('src','http://127.0.0.1:8887/' + (i-1) + '.png?'+d.getTime());
+		$('#bar-' + i).attr('src','http://127.0.0.1:8887/' + (i-1) + '.png?' + d.getTime());
 	}
 }
 

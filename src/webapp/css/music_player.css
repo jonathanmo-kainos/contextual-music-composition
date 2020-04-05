@@ -935,6 +935,10 @@ input:checked + .toggle:before {
 	margin-left: 2vw;
 }
 
+.download-button {
+	margin-top: 2vh;
+}
+
 #first-bar-row {
 	margin: 0.5%;
 }
@@ -955,7 +959,7 @@ input:checked + .toggle:before {
 }
 
 #music-display {
-	padding-bottom: 3%;
+	padding-bottom: 1%;
 }
 
 #music-controls {
@@ -975,7 +979,7 @@ input:checked + .toggle:before {
 	color: green;
 }
 
-.time-info-container {
+.time-info-and-download-container {
 	width: 33%;
 	text-align: left;
 	padding-left: 2vw;

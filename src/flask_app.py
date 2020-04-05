@@ -1,7 +1,6 @@
-from flask import Flask, jsonify, request, send_file, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory
 import json
 import model_output
-import enums
 import objects.PCASliderComponent
 import input_validator
 
@@ -52,7 +51,11 @@ def generate_specified_music():
     slider_components_serialised = objects.PCASliderComponent.serialize(slider_components)
 
     return jsonify(slider_components_serialised)
-    # return send_file(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
+
+
+@app.route("/downloadMidi", methods=['GET'])
+def download_midi():
+    return send_from_directory('../outputs/live/', 'livesong.mid')
 
 
 @app.route("/", methods=['GET'])
