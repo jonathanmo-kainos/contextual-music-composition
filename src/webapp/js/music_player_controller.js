@@ -73,7 +73,7 @@ $(document).on('click', '#generate-button-clicked', function() {
 
 $(document).on('click', '#download-midi-link', function() {
 	d = new Date();
-	var currentLink = $('#download-midi-link').prop('href')
+	var currentLink = $('#download-midi-link').prop('href');
 	$('#download-midi-link').prop('href', currentLink + '?' + d.getTime());
 });
 
