@@ -13,16 +13,12 @@ app = Flask(__name__,
 @app.route("/generateRandomMusic", methods=['GET'])
 def generate_random_music():
     user_input_text = request.args.get('userInput')
-
     user_input = input_validator.validate_text(user_input_text)
 
     slider_components = model_output.generate_random_song(user_input)
+    slider_components_serialised = objects.PCASliderComponent.serialize(slider_components)
 
-    first_10_slider_components_serialised = []
-    for i in range(10):
-        first_10_slider_components_serialised.append(objects.PCASliderComponent.serialize(slider_components[i]))
-
-    return jsonify(first_10_slider_components_serialised)
+    return jsonify(slider_components_serialised)
 
 
 @app.route("/generateSpecifiedMusic", methods=['GET'])
@@ -34,13 +30,29 @@ def generate_specified_music():
     note_certainty = request.args.get('noteCertainty')
     playback_speed = request.args.get('playbackSpeed')
     volume = request.args.get('volume')
-    slider_values = json.loads(request.args.get('sliderValues'))
+    randomise_on_screen_sliders = request.args.get('randomiseOnScreenSliders')
+    randomise_off_screen_sliders = request.args.get('randomiseOffScreenSliders')
+    pca_slider_components = json.loads(request.args.get('pcaSliderComponents'))
 
-    user_input = input_validator.validate_user_input(user_input_text, black_with_white, instrument_number, note_length, note_certainty, playback_speed, volume, slider_values)
+    deserialized_pca_slider_components = objects.PCASliderComponent.deserialize(pca_slider_components)
 
-    model_output.generate_user_context_song(user_input)
+    user_input = input_validator.validate_user_input(
+        user_input_text,
+        black_with_white,
+        instrument_number,
+        note_length,
+        note_certainty,
+        playback_speed,
+        volume,
+        randomise_on_screen_sliders,
+        randomise_off_screen_sliders,
+        deserialized_pca_slider_components)
 
-    return send_file(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
+    slider_components = model_output.generate_user_context_song(user_input)
+    slider_components_serialised = objects.PCASliderComponent.serialize(slider_components)
+
+    return jsonify(slider_components_serialised)
+    # return send_file(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
 
 
 @app.route("/", methods=['GET'])
