@@ -135,7 +135,8 @@ def midi_to_samples(midi_file_name):
     return song_bars
 
 
-def samples_to_midi(samples, song_name, instrument_number, note_length, black_with_white, certainty_for_note_to_be_played, playback_speed, volume):
+def samples_to_midi(samples, song_name, instrument_number, note_length, black_with_white,
+                    certainty_for_note_to_be_played, playback_speed, volume):
     boolean_matrix = samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_for_note_to_be_played)
     boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_length, playback_speed, volume)
 
@@ -183,7 +184,8 @@ def boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_le
             # Turn off notes
             for note in notes_to_turn_off:
                 if note.absolute_sample_index + note_length == (sample_index + (samples_per_bar * bar_index)):
-                    delta_time = calculate_delta_time(sample_index, bar_index, previous_message_sample_index, previous_message_bar_index, ticks_per_sample)
+                    delta_time = calculate_delta_time(sample_index, bar_index, previous_message_sample_index,
+                                                      previous_message_bar_index, ticks_per_sample)
 
                     track.append(Message(note_off, note=note.note, velocity=0, time=delta_time))
                     previous_message_sample_index = sample_index
@@ -191,7 +193,8 @@ def boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_le
             # Turn on notes
             for note_index in range(number_of_notes):
                 if boolean_matrix[bar_index, note_index, sample_index]:
-                    delta_time = calculate_delta_time(sample_index, bar_index, previous_message_sample_index, previous_message_bar_index, ticks_per_sample)
+                    delta_time = calculate_delta_time(sample_index, bar_index, previous_message_sample_index,
+                                                      previous_message_bar_index, ticks_per_sample)
 
                     track.append(Message(note_on, note=note_index, velocity=volume, time=delta_time))
                     current_note = objects.Note.define_note(note_index, (sample_index + (samples_per_bar * bar_index)))
@@ -208,6 +211,7 @@ def boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_le
         mid.save(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
 
 
-def calculate_delta_time(sample_index, bar_index, previous_message_sample_index, previous_message_bar_index, ticks_per_sample):
+def calculate_delta_time(sample_index, bar_index, previous_message_sample_index, previous_message_bar_index,
+                         ticks_per_sample):
     return (((sample_index + (samples_per_bar * bar_index)) -
              (previous_message_sample_index + (samples_per_bar * previous_message_bar_index))) * ticks_per_sample)

@@ -686,7 +686,7 @@ body {
   background: #007bff;
   outline: none;
   padding: 0;
-  margin: 10%;
+  margin: 5% 10%;
 }
 .config-slider {
   width: 43%;
@@ -731,7 +731,7 @@ body {
 }
 
 .config-toggle-label {
-  line-height: 10vh;
+  line-height: 6vh;
   width: 30%;
 }
 
@@ -815,12 +815,11 @@ input:checked + .toggle:before {
 }
 
 .dropdown {
-	margin-right: 2vw;
+	margin: 1vh 2vw 0 0;
 }
 
 .dropdown-menu {
 	left: -10vw;
-	top: 7vh;
 	max-height: 30vh;
   overflow: auto;
 }

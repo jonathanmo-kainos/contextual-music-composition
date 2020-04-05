@@ -50,7 +50,6 @@ def generate_and_save_samples_encoded(samples, name):
     print(str(len(encoded_samples)) + ' samples encoded')
     np.save(enums.get_encoded_samples_filepath(name), encoded_samples)
 
-
 # model = load_model(enums.AUTOENCODER_2000_FILEPATH)
 # split_autoencoder_trained_model_into_encoder_and_decoder_models(model)
 

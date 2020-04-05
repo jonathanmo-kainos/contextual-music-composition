@@ -9,9 +9,9 @@ app = Flask(__name__,
             static_folder='./webapp/')
 
 
-@app.route("/generateRandomMusic", methods=['GET'])
+@app.route("/generateRandomMusic", methods=['POST'])
 def generate_random_music():
-    user_input_text = request.args.get('userInput')
+    user_input_text = request.values.get('userInput')
     user_input = input_validator.validate_text(user_input_text)
 
     slider_components = model_output.generate_random_song(user_input)
@@ -20,18 +20,18 @@ def generate_random_music():
     return jsonify(slider_components_serialised)
 
 
-@app.route("/generateSpecifiedMusic", methods=['GET'])
+@app.route("/generateSpecifiedMusic", methods=['POST'])
 def generate_specified_music():
-    user_input_text = request.args.get('userInput')
-    black_with_white = request.args.get('blackWithWhite')
-    instrument_number = request.args.get('instrumentNumber')
-    note_length = request.args.get('noteLength')
-    note_certainty = request.args.get('noteCertainty')
-    playback_speed = request.args.get('playbackSpeed')
-    volume = request.args.get('volume')
-    randomise_on_screen_sliders = request.args.get('randomiseOnScreenSliders')
-    randomise_off_screen_sliders = request.args.get('randomiseOffScreenSliders')
-    pca_slider_components = json.loads(request.args.get('pcaSliderComponents'))
+    user_input_text = request.values.get('userInput')
+    black_with_white = request.values.get('blackWithWhite')
+    instrument_number = request.values.get('instrumentNumber')
+    note_length = request.values.get('noteLength')
+    note_certainty = request.values.get('noteCertainty')
+    playback_speed = request.values.get('playbackSpeed')
+    volume = request.values.get('volume')
+    randomise_on_screen_sliders = request.values.get('randomiseOnScreenSliders')
+    randomise_off_screen_sliders = request.values.get('randomiseOffScreenSliders')
+    pca_slider_components = json.loads(request.values.get('pcaSliderComponents'))
 
     deserialized_pca_slider_components = objects.PCASliderComponent.deserialize(pca_slider_components)
 
