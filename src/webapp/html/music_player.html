@@ -105,7 +105,14 @@
               </div>
             </div>
             <div id="music-controls">
-              <div class="time-info-container">MIDIjs audio time (s): <span id="current-time"></span><span id="total-time"></span></div>
+              <div class="time-info-and-download-container">
+                <div>MIDIjs audio time (s):
+                  <span id="current-time"></span><span id="total-time"></span>
+                </div>
+                <a id="download-midi-link" href="/downloadMidi" target="_blank">
+                  <button class="btn btn-primary download-button"><i class="fa fa-download"></i> Download MIDI</button>
+                </a>
+              </div>
               <div class="play-pause-container"><button class="play-pause-button playing"></button></div>
               <div class="loop-button-container"><i id="loop-song" class="fa fa-repeat looping" aria-hidden="true"></i></div>
             </div>
