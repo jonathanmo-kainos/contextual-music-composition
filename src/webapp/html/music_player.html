@@ -2,7 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Generate music</title>
+  <title>Music Generation</title>
+  <link rel="shortcut icon" href="../images/favicon.ico">
+  <link rel="icon" sizes="16x16 32x32 64x64" href="../images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="196x196" href="../images/favicon-192.png">
+  <link rel="icon" type="image/png" sizes="160x160" href="../images/favicon-160.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../images/favicon-96.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="../images/favicon-64.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon-16.png">
+  <link rel="apple-touch-icon" href="../images/favicon-57.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon-114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon-72.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="../images/favicon-144.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="../images/favicon-60.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="../images/favicon-120.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="../images/favicon-76.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="../images/favicon-152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/favicon-180.png">
+  <meta name="msapplication-TileColor" content="#FFFFFF">
+  <meta name="msapplication-TileImage" content="/favicon-144.png">
+  <meta name="msapplication-config" content="/browserconfig.xml">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -106,7 +126,7 @@
             </div>
             <div id="music-controls">
               <div class="time-info-and-download-container">
-                <div>MIDIjs audio time (s):
+                <div>Current time:
                   <span id="current-time"></span><span id="total-time"></span>
                 </div>
                 <a id="download-midi-link" href="/downloadMidi" target="_blank">
@@ -133,11 +153,11 @@
           </div>
           <div class="config-option">
             <label class="left config-toggle-label">Note length</label>
-            <input id="length-slider" type="range" min="1" max="100" value="50" class="slider config-slider">
+            <input id="length-slider" type="range" min="1" max="150" value="75" class="slider config-slider">
           </div>
           <div class="config-option">
-            <label class="left config-toggle-label">Tempo</label>
-            <input id="playback-speed-slider" type="range" min="0.2" max="5" value="1" step="0.1" class="slider config-slider">
+            <label class="left config-toggle-label">Speed</label>
+            <input id="speed-slider" type="range" min="0.2" max="5" value="1" step="0.1" class="slider config-slider">
           </div>
           <div class="config-option">
             <label class="left config-toggle-label">Volume</label>
