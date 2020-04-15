@@ -24,6 +24,11 @@ class EnvVars:
     # CONFIG
     AZURE_CONFIG_DIRECTORY_FILEPATH = PROD_HOME_DIRECTORY + 'config/azure-config.json'
 
+    # SAMPLE TYPES
+    MAJOR_SAMPLE_TYPE = 'major'
+    MINOR_SAMPLE_TYPE = 'minor'
+    ALL_SAMPLE_TYPE = 'all'
+
 
 def init_env_vars():
     if EnvVars.LOCAL_MODE:

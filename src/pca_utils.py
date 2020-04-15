@@ -4,7 +4,7 @@ from random import uniform
 import enums
 import objects.PCASliderComponent
 
-NUM_PCA_COMPONENTS = 120
+NUM_PCA_COMPONENTS = 100
 NUM_INCREMENTS = 500
 
 

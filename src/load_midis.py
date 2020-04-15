@@ -4,8 +4,7 @@ import os
 import numpy as np
 import logging
 
-midi_filepath = r"C:\Users\Jonny\Downloads\Uni project\midis"
-# midi_filepath = r"C:\Users\Jonny\PycharmProjects\contextual-music-composition\src"
+midi_filepath = r"MIDI FILEPATH HERE"
 
 all_samples = []
 major_samples = []
