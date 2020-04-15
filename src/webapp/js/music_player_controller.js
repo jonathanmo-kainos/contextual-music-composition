@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 var totalTime = 0;
 var currentTime = 0;
 var isSongFinished = false;
