@@ -12,17 +12,23 @@ app = Flask(__name__,
 @app.route("/generateRandomMusic", methods=['POST'])
 def generate_random_music():
     user_input_text = request.values.get('userInput')
+    current_uuid = request.values.get('currentUUID')
+    previous_uuid = request.values.get('previousUUID')
+
     user_input = input_validator.validate_text(user_input_text)
 
-    slider_components = model_output.generate_random_song(user_input)
-    slider_components_serialised = objects.PCASliderComponent.serialize(slider_components)
+    initial_input = model_output.generate_random_song(user_input, current_uuid, previous_uuid)
+    initial_input.pca_slider_components = objects.PCASliderComponent.serialize(initial_input.pca_slider_components)
+    initial_input = json.dumps(initial_input.__dict__)
 
-    return jsonify(slider_components_serialised)
+    return initial_input
 
 
 @app.route("/generateSpecifiedMusic", methods=['POST'])
 def generate_specified_music():
     user_input_text = request.values.get('userInput')
+    current_uuid = request.values.get('currentUUID')
+    previous_uuid = request.values.get('previousUUID')
     black_with_white = request.values.get('blackWithWhite')
     instrument_number = request.values.get('instrumentNumber')
     note_length = request.values.get('noteLength')
@@ -47,7 +53,7 @@ def generate_specified_music():
         randomise_off_screen_sliders,
         deserialized_pca_slider_components)
 
-    slider_components = model_output.generate_user_context_song(user_input)
+    slider_components = model_output.generate_user_context_song(user_input, current_uuid, previous_uuid)
     slider_components_serialised = objects.PCASliderComponent.serialize(slider_components)
 
     return jsonify(slider_components_serialised)
@@ -55,7 +61,8 @@ def generate_specified_music():
 
 @app.route("/downloadMidi", methods=['GET'])
 def download_midi():
-    return send_from_directory('../outputs/live/', 'livesong.mid')
+    current_uuid = request.values.get('currentUUID')
+    return send_from_directory('../outputs/live/' + current_uuid + '/', 'livesong.mid')
 
 
 @app.route("/", methods=['GET'])
