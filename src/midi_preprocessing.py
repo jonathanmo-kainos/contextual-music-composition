@@ -135,13 +135,13 @@ def midi_to_samples(midi_file_name):
     return song_bars
 
 
-def samples_to_midi(samples, song_name, instrument_number, note_length, black_with_white,
+def samples_to_midi(current_uuid, samples, song_name, instrument_number, note_length, black_with_white,
                     certainty_for_note_to_be_played, playback_speed, volume):
-    boolean_matrix = samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_for_note_to_be_played)
-    boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_length, playback_speed, volume)
+    boolean_matrix = samples_to_boolean_matrix(current_uuid, samples, song_name, black_with_white, certainty_for_note_to_be_played)
+    boolean_matrix_to_midi(current_uuid, boolean_matrix, song_name, instrument_number, note_length, playback_speed, volume)
 
 
-def samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_for_note_to_be_played):
+def samples_to_boolean_matrix(current_uuid, samples, song_name, black_with_white, certainty_for_note_to_be_played):
     output_midi_array = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
     output_midi_array_image = np.full((number_of_bars, number_of_notes, samples_per_bar), False, dtype=bool)
     if black_with_white:
@@ -151,7 +151,7 @@ def samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_fo
     if enums.EnvVars.DEBUG_MODE:
         output_directory = '../outputs/' + song_name
     else:
-        output_directory = enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH
+        output_directory = enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + current_uuid
     if not os.path.exists(output_directory):
         print("Directory doesn't exist. Creating directory " + output_directory)
         os.makedirs(output_directory)
@@ -168,7 +168,7 @@ def samples_to_boolean_matrix(samples, song_name, black_with_white, certainty_fo
     return output_midi_array
 
 
-def boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_length, playback_speed, volume):
+def boolean_matrix_to_midi(current_uuid, boolean_matrix, song_name, instrument_number, note_length, playback_speed, volume):
     mid = MidiFile()
     track = MidiTrack()
     track.append(Message('program_change', program=instrument_number, time=0))
@@ -208,7 +208,7 @@ def boolean_matrix_to_midi(boolean_matrix, song_name, instrument_number, note_le
     if enums.EnvVars.DEBUG_MODE:
         mid.save('../outputs//' + song_name + '/' + song_name + '.mid')
     else:
-        mid.save(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + 'livesong.mid')
+        mid.save(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + current_uuid + '/' + 'livesong.mid')
 
 
 def calculate_delta_time(sample_index, bar_index, previous_message_sample_index, previous_message_bar_index,

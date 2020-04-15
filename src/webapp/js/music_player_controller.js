@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 var totalTime = 0;
 var currentTime = 0;
 var isSongFinished = false;
@@ -15,15 +17,24 @@ var volume = 63;
 var randomiseOnScreenSliders = true;
 var randomiseOffScreenSliders = true;
 var pcaSliderComponents = [];
+var currentUUID = '';
+var previousUUID = '';
+
+var liveOutputDirectoryFilepath = 'http://127.0.0.1:8887/';
+//var liveOutputDirectoryFilepath = '../outputs/live/';
 
 $('#generate-button').one('click', function() {
 	userInput = $('#user-input').val();
+	updateUUIDs();
 
 	stopPlayback();
 
-    $.post('/generateRandomMusic', {userInput: userInput}, function(data) {
-        console.log('data: ', data);
-        setSliderValues(data);
+    $.post('/generateRandomMusic', {userInput: userInput, currentUUID: currentUUID, previousUUID: previousUUID}, function(data) {
+        var input = JSON.parse(data);
+        setSliderValues(input.pca_slider_components);
+        setNoteDensity(input.note_certainty);
+        setNoteLength(input.note_length);
+        setSpeed(input.playback_speed);
     }).then(function() {
 		playSongFromUrl();
 		setSongDuration();
@@ -40,16 +51,19 @@ $(document).on('click', '#generate-button-clicked', function() {
 	blackWithWhite = $('#image-colour-toggle').is(':checked');
 	noteCertainty = (100 - $('#density-slider').val());
 	noteLength = $('#length-slider').val();
-	playbackSpeed = $('#playback-speed-slider').val();
+	playbackSpeed = $('#speed-slider').val();
 	volume = $('#volume-slider').val();
 	randomiseOnScreenSliders = $('#randomise-on-screen-sliders').is(':checked');
 	randomiseOffScreenSliders = $('#randomise-off-screen-sliders').is(':checked');
 	pcaSliderComponents = getPcaSliderComponents();
+	updateUUIDs();
 
 	stopPlayback();
 
     $.post('/generateSpecifiedMusic', {
             userInput: userInput,
+            currentUUID: currentUUID,
+            previousUUID: previousUUID,
             blackWithWhite: blackWithWhite,
             noteCertainty: noteCertainty,
             noteLength: noteLength,
@@ -60,7 +74,6 @@ $(document).on('click', '#generate-button-clicked', function() {
             randomiseOffScreenSliders: randomiseOffScreenSliders,
             pcaSliderComponents: pcaSliderComponents}, function(data) {
         setSliderValues(data);
-        console.log('data: ', data);
     }).then(function() {
 		playSongFromUrl();
 		setSongDuration();
@@ -71,30 +84,11 @@ $(document).on('click', '#generate-button-clicked', function() {
     return false;
 });
 
-$(document).on('click', '#download-midi-link', function() {
-	d = new Date();
-	var currentLink = $('#download-midi-link').prop('href');
-	$('#download-midi-link').prop('href', currentLink + '?' + d.getTime());
-});
-
 function getPcaSliderComponents() {
 	for (i = 1; i <= 10; i++) {
 		pcaSliderComponents[i-1].number = parseFloat($('#slider-' + i).val());
-		console.log($('#slider-' + i).val());
 	}
-	console.log('pcaSliderComponents: ', pcaSliderComponents.length);
 	return JSON.stringify(pcaSliderComponents);
-}
-
-function setSliderValues(sliderComponents) {
-	pcaSliderComponents = sliderComponents;
-	for (i = 1; i <= 10; i++) {
-		$('#slider-' + i).val(sliderComponents[i-1].number);
-		$('#slider-' + i).prop('min', sliderComponents[i-1].bottomLimit);
-		$('#slider-' + i).prop('max', sliderComponents[i-1].topLimit);
-		$('#slider-' + i).prop('step', sliderComponents[i-1].incrementValue);
-	}
-	console.log('sliderComponents: ', sliderComponents);
 }
 
 function generateRandomName() {
@@ -108,23 +102,13 @@ function generateRandomName() {
 function updateBarImages() {
 	d = new Date();
 	for(i = 1; i < 17; i++) {
-//		$('#bar-' + i).prop('src','../outputs/live/' + (i-1) + '.png?'+d.getTime());
-		$('#bar-' + i).prop('src','http://127.0.0.1:8887/' + (i-1) + '.png?' + d.getTime());
+		$('#bar-' + i).prop('src', liveOutputDirectoryFilepath + (i-1) + '.png?' + d.getTime());
 	}
 }
 
 // MUSIC CONTROL FUNCTIONS
-function setSongDuration() {
-//	MIDIjs.get_duration('../outputs/live/livesong.mid', function(seconds) {
-	MIDIjs.get_duration('http://127.0.0.1:8887/livesong.mid', function(seconds) {
-		totalTime = Math.round(seconds);
-		$('#total-time').text(' / ' + convertSecondsToMinutes(totalTime));
-	});
-}
-
 function playSongFromUrl() {
-//	MIDIjs.play('../outputs/live/livesong.mid');
-	MIDIjs.play('http://127.0.0.1:8887/livesong.mid');
+	MIDIjs.play(liveOutputDirectoryFilepath + 'livesong.mid');
     $('.play-pause-button').addClass('playing');
     isSongFinished = false;
     playbackStopped = false;
@@ -135,7 +119,6 @@ function stopPlayback() {
 	playbackStopped = true;
     $('.play-pause-button').removeClass('playing');
 	if (isSongFinished && loopSong) {
-		console.log('looping');
 		playSongFromUrl();
 	}
 }
@@ -143,7 +126,6 @@ function stopPlayback() {
 function setupMidiJsTimeCounting() {
 	MIDIjs.player_callback = displayTime;
 	function displayTime(playerEvent) {
-	console.log('displaytime');
 		currentTime = Math.floor(playerEvent.time);
 		if (currentTime == totalTime && !isSongFinished) {
 			currentTime = 0;
@@ -154,6 +136,36 @@ function setupMidiJsTimeCounting() {
 			stopPlayback();
 		}
 	}
+}
+
+// SETTERS FOR CONFIGS
+function setSliderValues(sliderComponents) {
+	pcaSliderComponents = sliderComponents;
+	for (i = 1; i <= 10; i++) {
+		$('#slider-' + i).val(sliderComponents[i-1].number);
+		$('#slider-' + i).prop('min', sliderComponents[i-1].bottomLimit);
+		$('#slider-' + i).prop('max', sliderComponents[i-1].topLimit);
+		$('#slider-' + i).prop('step', sliderComponents[i-1].incrementValue);
+	}
+}
+
+function setNoteDensity(noteCertainty) {
+	$('#density-slider').val(100 - noteCertainty);
+}
+
+function setNoteLength(noteLength) {
+	$('#length-slider').val(noteLength);
+}
+
+function setSpeed(speed) {
+	$('#speed-slider').val(speed);
+}
+
+function setSongDuration() {
+	MIDIjs.get_duration(liveOutputDirectoryFilepath + 'livesong.mid', function(seconds) {
+		totalTime = Math.round(seconds);
+		$('#total-time').text(' / ' + convertSecondsToMinutes(totalTime));
+	});
 }
 
 // WATCHERS
@@ -197,4 +209,18 @@ function convertSecondsToMinutes(currentTimeInSeconds) {
     var minutes = Math.floor(currentTimeInSeconds / 60);
     currentTimeInSeconds -= minutes * 60;
     return timeToDisplay + (minutes < 10 ? '0' + minutes : minutes) + ':' + (currentTimeInSeconds < 10 ? '0' + currentTimeInSeconds : currentTimeInSeconds);
+}
+
+function generateUUID() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+function updateUUIDs() {
+	previousUUID = currentUUID;
+	currentUUID = generateUUID();
+//	liveOutputDirectoryFilepath = '../outputs/live/' + currentUUID + '/';
+	liveOutputDirectoryFilepath = 'http://127.0.0.1:8887/' + currentUUID + '/';
+	$('#download-midi-link').prop('href', '/downloadMidi' + '?currentUUID=' + currentUUID);
 }

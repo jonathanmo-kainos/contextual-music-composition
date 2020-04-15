@@ -12,7 +12,7 @@ language_api_url = endpoint + '/text/analytics/v2.1/languages'
 sentiment_api_url = endpoint + '/text/analytics/v2.1/sentiment'
 
 
-def is_sentiment_negative(user_input_text):
+def get_sample_type_based_on_user_input(user_input_text):
     detected_language = detect_language_of_user_input_text(user_input_text)
     documents = {"documents": [
         {"id": "1", "language": detected_language,
@@ -25,10 +25,10 @@ def is_sentiment_negative(user_input_text):
 
     if sentiments['documents'][0]['score'] < 0.5:
         print('User input has a negative sentiment')
-        return True
+        return enums.EnvVars.MINOR_SAMPLE_TYPE
     else:
         print('User input has a positive sentiment')
-        return False
+        return enums.EnvVars.MAJOR_SAMPLE_TYPE
 
 
 def detect_language_of_user_input_text(user_input_text):
@@ -41,10 +41,3 @@ def detect_language_of_user_input_text(user_input_text):
     pprint(languages)
 
     return languages['documents'][0]['detectedLanguages'][0]['iso6391Name']
-
-
-def get_sample_type_based_on_user_input(user_input_text):
-    if is_sentiment_negative(user_input_text):
-        return 'minor'
-    else:
-        return 'major'

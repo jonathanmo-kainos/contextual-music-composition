@@ -58,8 +58,8 @@ def validate_volume(volume):
 
 
 def validate_note_length(note_length):
-    if not note_length or int(note_length) > 500 or int(note_length) < 5:
-        note_length = 50
+    if not note_length or int(note_length) > 150 or int(note_length) < 1:
+        note_length = 75
     return int(note_length)
 
 
