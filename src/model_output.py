@@ -14,7 +14,7 @@ def generate_random_song(user_input_text, current_uuid, previous_uuid):
     sample_type = get_sample_type(user_input_text)
 
     default_volume = 63
-    default_black_with_white = False
+    default_black_with_white = True
     default_instrument = 0
     default_randomise_on_screen_sliders = True
     default_randomise_off_screen_sliders = True

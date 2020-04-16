@@ -15,7 +15,7 @@ def generate_random_music():
     current_uuid = request.values.get('currentUUID')
     previous_uuid = request.values.get('previousUUID')
 
-    user_input = input_validator.validate_text(user_input_text)
+    user_input = input_validator.InputValidator.validate_text(user_input_text)
 
     initial_input = model_output.generate_random_song(user_input, current_uuid, previous_uuid)
     initial_input.pca_slider_components = objects.PCASliderComponent.serialize(initial_input.pca_slider_components)
@@ -41,7 +41,7 @@ def generate_specified_music():
 
     deserialized_pca_slider_components = objects.PCASliderComponent.deserialize(pca_slider_components)
 
-    user_input = input_validator.validate_user_input(
+    user_input = input_validator.InputValidator.validate_user_input(
         user_input_text,
         black_with_white,
         instrument_number,

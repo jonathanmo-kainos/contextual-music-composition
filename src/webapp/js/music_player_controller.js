@@ -1,5 +1,10 @@
 /*jshint esversion: 6 */
 
+var functions = {
+	convertSecondsToTime: convertSecondsToTime,
+	generateUUID: generateUUID
+}
+
 var totalTime = 0;
 var currentTime = 0;
 var isSongFinished = false;
@@ -91,14 +96,6 @@ function getPcaSliderComponents() {
 	return JSON.stringify(pcaSliderComponents);
 }
 
-function generateRandomName() {
-	var name = generateName();
-	var exclamation = generateExclamation();
-
-    $('#song-name').text(name);
-    $('#song-exclamation').text(exclamation);
-}
-
 function updateBarImages() {
 	d = new Date();
 	for(i = 1; i < 17; i++) {
@@ -131,7 +128,7 @@ function setupMidiJsTimeCounting() {
 			currentTime = 0;
 			isSongFinished = true;
 		}
-		$('#current-time').text(convertSecondsToMinutes(currentTime));
+		$('#current-time').text(convertSecondsToTime(currentTime));
 		if (isSongFinished && !playbackStopped) {
 			stopPlayback();
 		}
@@ -164,7 +161,7 @@ function setSpeed(speed) {
 function setSongDuration() {
 	MIDIjs.get_duration(liveOutputDirectoryFilepath + 'livesong.mid', function(seconds) {
 		totalTime = Math.round(seconds);
-		$('#total-time').text(' / ' + convertSecondsToMinutes(totalTime));
+		$('#total-time').text(' / ' + convertSecondsToTime(totalTime));
 	});
 }
 
@@ -199,7 +196,7 @@ $('.music-control-slider').click(function() {
 });
 
 // HELPER METHODS
-function convertSecondsToMinutes(currentTimeInSeconds) {
+function convertSecondsToTime(currentTimeInSeconds) {
 	var timeToDisplay = '';
 	var hours = Math.floor(currentTimeInSeconds / 3600);
 	if (hours > 0) {
@@ -211,10 +208,20 @@ function convertSecondsToMinutes(currentTimeInSeconds) {
     return timeToDisplay + (minutes < 10 ? '0' + minutes : minutes) + ':' + (currentTimeInSeconds < 10 ? '0' + currentTimeInSeconds : currentTimeInSeconds);
 }
 
-function generateUUID() {
-  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  );
+function generateUUID() { // Public Domain/MIT
+    var d = new Date().getTime(); //Timestamp
+    var d2 = (performance && performance.now && (performance.now()*1000)) || 0; //Time in microseconds since page-load or 0 if unsupported
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if(d > 0){ //Use timestamp until depleted
+            r = (d + r)%16 | 0;
+            d = Math.floor(d/16);
+        } else { //Use microseconds since page-load if supported
+            r = (d2 + r)%16 | 0;
+            d2 = Math.floor(d2/16);
+        }
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
 }
 
 function updateUUIDs() {
@@ -224,3 +231,13 @@ function updateUUIDs() {
 	liveOutputDirectoryFilepath = 'http://127.0.0.1:8887/' + currentUUID + '/';
 	$('#download-midi-link').prop('href', '/downloadMidi' + '?currentUUID=' + currentUUID);
 }
+
+function generateRandomName() {
+	var name = generateName();
+	var exclamation = generateExclamation();
+
+    $('#song-name').text(name);
+    $('#song-exclamation').text(exclamation);
+}
+
+module.exports = functions;
