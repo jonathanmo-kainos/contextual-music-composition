@@ -1,6 +1,6 @@
 class UserInput(object):
     text = ''
-    black_with_white = False
+    black_with_white = True
     instrument_number = 0
     note_certainty = 99.9
     playback_speed = 1
