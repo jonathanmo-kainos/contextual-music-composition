@@ -1,0 +1,30 @@
+{
+  "name": "contextual-music-composition",
+  "version": "1.0.0",
+  "description": "A context driven neural network which generates music",
+  "main": "index.js",
+  "dependencies": {
+    "jest": "^25.3.0",
+    "jquery": "^3.5.0",
+    "npm": "^6.14.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonathanmo-kainos/contextual-music-composition.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonathanmo-kainos/contextual-music-composition/issues"
+  },
+  "homepage": "https://github.com/jonathanmo-kainos/contextual-music-composition#readme",
+  "jest": {
+    "setupFiles": [
+      "./setup-jest.js"
+    ]
+  }
+}
