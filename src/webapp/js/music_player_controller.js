@@ -3,7 +3,7 @@
 var functions = {
 	convertSecondsToTime: convertSecondsToTime,
 	generateUUID: generateUUID
-}
+};
 
 var totalTime = 0;
 var currentTime = 0;

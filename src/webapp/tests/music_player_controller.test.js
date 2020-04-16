@@ -1,4 +1,6 @@
-const music_player_controller = require('../js/music_player_controller');
+/*jshint esversion: 6 */
+
+var music_player_controller = require('../js/music_player_controller');
 
 describe('music_player_controller tests', () => {
 	test('convertSecondsToTime 1', () => {
@@ -22,16 +24,16 @@ describe('music_player_controller tests', () => {
 	});
 
 	test('generateUUID unique', () => {
-		const uuid1 = music_player_controller.generateUUID();
-		const uuid2 = music_player_controller.generateUUID();
+		var uuid1 = music_player_controller.generateUUID();
+		var uuid2 = music_player_controller.generateUUID();
 		expect(uuid1).not.toBe(uuid2);
 	});
 
 	test('generateUUID regex', () => {
-		const expected = [
+		var expected = [
 			expect.stringMatching(/[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/),
 		];
-		const uuids = [music_player_controller.generateUUID(), music_player_controller.generateUUID()];
+		var uuids = [music_player_controller.generateUUID(), music_player_controller.generateUUID()];
         expect(uuids).toEqual(expect.arrayContaining(expected),);
 	});
 });
