@@ -33,6 +33,7 @@ def get_decoder_input_from_slider_configs(name, randomise_on_screen_sliders, ran
     specified_decoder_input = []
     slider_components = []
 
+    # Generate on screen slider values
     for i in range(10):
         if randomise_on_screen_sliders:
             specified_decoder_input, slider_components = generate_random_number_between_pca_limits(pca, encoded_samples,
@@ -42,6 +43,7 @@ def get_decoder_input_from_slider_configs(name, randomise_on_screen_sliders, ran
             specified_decoder_input.append(pca_slider_components[i].number)
             slider_components.append(pca_slider_components[i])
 
+    # Generate off screen slider values
     for i in range(10, NUM_PCA_COMPONENTS):
         if randomise_off_screen_sliders:
             specified_decoder_input, slider_components = generate_random_number_between_pca_limits(pca, encoded_samples,

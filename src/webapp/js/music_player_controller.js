@@ -1,9 +1,9 @@
 /*jshint esversion: 6 */
 
-//module.exports = {
-//	convertSecondsToTime: convertSecondsToTime,
-//	generateUUID: generateUUID
-//};
+module.exports = {
+	convertSecondsToTime: convertSecondsToTime,
+	generateUUID: generateUUID
+};
 
 var totalTime = 0;
 var currentTime = 0;
@@ -28,6 +28,7 @@ var previousUUID = '';
 var liveOutputDirectoryFilepath = 'http://127.0.0.1:8887/';
 //var liveOutputDirectoryFilepath = '../outputs/live/';
 
+// POST REQUESTS =======================================================================
 $('#generate-button').one('click', function() {
 	stopPlayback();
     fadeControlsOut();
@@ -36,7 +37,8 @@ $('#generate-button').one('click', function() {
 	userInput = $('#user-input').val();
 	updateUUIDs();
 
-    $.post('/generateRandomMusic', {userInput: userInput, currentUUID: currentUUID, previousUUID: previousUUID}, function(data) {
+    $.post('/generateRandomMusic', {userInput: userInput, currentUUID: currentUUID, previousUUID: previousUUID},
+    function(data) {
         var input = JSON.parse(data);
         setSliderValues(input.pca_slider_components);
         setNoteDensity(input.note_certainty);
@@ -109,7 +111,7 @@ function updateBarImages() {
 	}
 }
 
-// MUSIC CONTROL FUNCTIONS
+// MUSIC CONTROL FUNCTIONS =======================================================================
 function playSongFromUrl() {
 	MIDIjs.play(liveOutputDirectoryFilepath + 'livesong.mid');
     $('.play-pause-button').addClass('playing');
@@ -143,7 +145,7 @@ function setupMidiJsTimeCounting() {
 	}
 }
 
-// SETTERS FOR CONFIGS
+// SETTERS FOR CONFIGS =======================================================================
 function setSliderValues(sliderComponents) {
 	pcaSliderComponents = sliderComponents;
 	for (i = 1; i <= 10; i++) {
@@ -173,7 +175,7 @@ function setSongDuration() {
 	});
 }
 
-// WATCHERS
+// WATCHERS =======================================================================
 $('.mega-menu-column a').click(function() {
    instrumentNumber = $(this).prop('id');
    $('#instrument-dropdown-header').text('Instrument: ' + $(this).text());
@@ -203,7 +205,7 @@ $('.music-control-slider').click(function() {
     randomiseOnScreenSliders = false;
 });
 
-// HELPER METHODS
+// HELPER METHODS =======================================================================
 function convertSecondsToTime(timeInSeconds) {
 	var timeToDisplay = '';
 	var hours = Math.floor(timeInSeconds / 3600);
@@ -213,12 +215,14 @@ function convertSecondsToTime(timeInSeconds) {
     timeInSeconds -= hours * 3600;
     var minutes = Math.floor(timeInSeconds / 60);
     timeInSeconds -= minutes * 60;
-    return timeToDisplay + (minutes < 10 ? '0' + minutes : minutes) + ':' + (timeInSeconds < 10 ? '0' + timeInSeconds : timeInSeconds);
+    return timeToDisplay + (minutes < 10 ? '0' + minutes : minutes) + ':' +
+        (timeInSeconds < 10 ? '0' + timeInSeconds : timeInSeconds);
 }
 
 function generateUUID() { // Public Domain/MIT
     var timestamp = new Date().getTime(); // Timestamp
-    var performanceStamp = (performance && performance.now && (performance.now() * 1000)) || 0; // Time in microseconds since page-load or 0 if unsupported
+    // Time in microseconds since page-load or 0 if unsupported
+    var performanceStamp = (performance && performance.now && (performance.now() * 1000)) || 0;
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var randomNumber = Math.random() * 16; // random number between 0 and 16
         if (timestamp > 0) { // Use timestamp until depleted

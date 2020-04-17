@@ -156,6 +156,7 @@ def samples_to_boolean_matrix(current_uuid, samples, song_name, black_with_white
         print("Directory doesn't exist. Creating directory " + output_directory)
         os.makedirs(output_directory)
 
+    # Take samples output from model and pick which notes to play
     for bar_index in range(number_of_bars):
         upper_quartile_certainty = np.percentile(samples[0, bar_index, :, :], certainty_for_note_to_be_played)
         for tick_index in range(samples_per_bar):

@@ -67,7 +67,6 @@ def generate_user_context_song(user_input, current_uuid, previous_uuid):
 
 def get_sample_type(user_input_text):
     if user_input_text != '':
-        # return 'minor'
         return sentiment_analysis.get_sample_type_based_on_user_input(user_input_text)
     else:
         return 'all'
