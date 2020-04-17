@@ -3,36 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>Music Generation</title>
-  <link rel="shortcut icon" href="../images/favicon.ico">
-  <link rel="icon" sizes="16x16 32x32 64x64" href="../images/favicon.ico">
-  <link rel="icon" type="image/png" sizes="196x196" href="../images/favicon-192.png">
-  <link rel="icon" type="image/png" sizes="160x160" href="../images/favicon-160.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="../images/favicon-96.png">
-  <link rel="icon" type="image/png" sizes="64x64" href="../images/favicon-64.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon-16.png">
-  <link rel="apple-touch-icon" href="../images/favicon-57.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon-114.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon-72.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="../images/favicon-144.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="../images/favicon-60.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="../images/favicon-120.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="../images/favicon-76.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="../images/favicon-152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="../images/favicon-180.png">
-  <meta name="msapplication-TileColor" content="#FFFFFF">
-  <meta name="msapplication-TileImage" content="/favicon-144.png">
-  <meta name="msapplication-config" content="/browserconfig.xml">
+<!--  FAVICON-->
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon-16x16.png">
+  <link rel="manifest" href="../images/site.webmanifest">
+  <link rel="mask-icon" href="../images/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+<!--  STYLES-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="../css/music_player.css">
+<!--  JS CODE IMPORTS-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.6/gsap.min.js"></script>
   <script type='text/javascript' src='//www.midijs.net/lib/midi.js'></script>
   <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 </head>
 <body>
+  <div id="spinner" class="invisible"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
   <div class="wrapper">
     <!-- Wave bg-->
     <div class="wave-container">
@@ -80,48 +71,26 @@
           <div class="music-player-controls">
             <div id="song-exclamation"></div>
             <div id="song-name"></div>
-<!--            <div id="music-display">-->
-<!--              <div id="first-bar-row">-->
-<!--                <img id="bar-1" src="../outputs/live/0.png" width="11.5%">-->
-<!--                <img id="bar-2" src="../outputs/live/1.png" width="11.5%">-->
-<!--                <img id="bar-3" src="../outputs/live/2.png" width="11.5%">-->
-<!--                <img id="bar-4" src="../outputs/live/3.png" width="11.5%">-->
-<!--                <img id="bar-5" src="../outputs/live/4.png" width="11.5%">-->
-<!--                <img id="bar-6" src="../outputs/live/5.png" width="11.5%">-->
-<!--                <img id="bar-7" src="../outputs/live/6.png" width="11.5%">-->
-<!--                <img id="bar-8" src="../outputs/live/7.png" width="11.5%">-->
-<!--              </div>-->
-<!--              <div id="second-bar-row">-->
-<!--                <img id="bar-9" src="../outputs/live/8.png" width="11.5%">-->
-<!--                <img id="bar-10" src="../outputs/live/9.png" width="11.5%">-->
-<!--                <img id="bar-11" src="../outputs/live/10.png" width="11.5%">-->
-<!--                <img id="bar-12" src="../outputs/live/11.png" width="11.5%">-->
-<!--                <img id="bar-13" src="../outputs/live/12.png" width="11.5%">-->
-<!--                <img id="bar-14" src="../outputs/live/13.png" width="11.5%">-->
-<!--                <img id="bar-15" src="../outputs/live/14.png" width="11.5%">-->
-<!--                <img id="bar-16" src="../outputs/live/15.png" width="11.5%">-->
-<!--              </div>-->
-<!--            </div>-->
             <div id="music-display">
               <div id="first-bar-row">
-                <img id="bar-1" src="http://127.0.0.1:8887/0.png" width="11.5%">
-                <img id="bar-2" src="http://127.0.0.1:8887/1.png" width="11.5%">
-                <img id="bar-3" src="http://127.0.0.1:8887/2.png" width="11.5%">
-                <img id="bar-4" src="http://127.0.0.1:8887/3.png" width="11.5%">
-                <img id="bar-5" src="http://127.0.0.1:8887/4.png" width="11.5%">
-                <img id="bar-6" src="http://127.0.0.1:8887/5.png" width="11.5%">
-                <img id="bar-7" src="http://127.0.0.1:8887/6.png" width="11.5%">
-                <img id="bar-8" src="http://127.0.0.1:8887/7.png" width="11.5%">
+                <img id="bar-1" width="11.5%">
+                <img id="bar-2" width="11.5%">
+                <img id="bar-3" width="11.5%">
+                <img id="bar-4" width="11.5%">
+                <img id="bar-5" width="11.5%">
+                <img id="bar-6" width="11.5%">
+                <img id="bar-7" width="11.5%">
+                <img id="bar-8" width="11.5%">
               </div>
               <div id="second-bar-row">
-                <img id="bar-9" src="http://127.0.0.1:8887/8.png" width="11.5%">
-                <img id="bar-10" src="http://127.0.0.1:8887/9.png" width="11.5%">
-                <img id="bar-11" src="http://127.0.0.1:8887/10.png" width="11.5%">
-                <img id="bar-12" src="http://127.0.0.1:8887/11.png" width="11.5%">
-                <img id="bar-13" src="http://127.0.0.1:8887/12.png" width="11.5%">
-                <img id="bar-14" src="http://127.0.0.1:8887/13.png" width="11.5%">
-                <img id="bar-15" src="http://127.0.0.1:8887/14.png" width="11.5%">
-                <img id="bar-16" src="http://127.0.0.1:8887/15.png" width="11.5%">
+                <img id="bar-9" width="11.5%">
+                <img id="bar-10" width="11.5%">
+                <img id="bar-11" width="11.5%">
+                <img id="bar-12" width="11.5%">
+                <img id="bar-13" width="11.5%">
+                <img id="bar-14" width="11.5%">
+                <img id="bar-15" width="11.5%">
+                <img id="bar-16" width="11.5%">
               </div>
             </div>
             <div id="music-controls">

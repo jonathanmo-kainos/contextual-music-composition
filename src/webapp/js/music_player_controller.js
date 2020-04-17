@@ -1,9 +1,9 @@
 /*jshint esversion: 6 */
 
-var functions = {
-	convertSecondsToTime: convertSecondsToTime,
-	generateUUID: generateUUID
-};
+//module.exports = {
+//	convertSecondsToTime: convertSecondsToTime,
+//	generateUUID: generateUUID
+//};
 
 var totalTime = 0;
 var currentTime = 0;
@@ -29,10 +29,12 @@ var liveOutputDirectoryFilepath = 'http://127.0.0.1:8887/';
 //var liveOutputDirectoryFilepath = '../outputs/live/';
 
 $('#generate-button').one('click', function() {
+	stopPlayback();
+    fadeControlsOut();
+    clearHighlightedBars();
+
 	userInput = $('#user-input').val();
 	updateUUIDs();
-
-	stopPlayback();
 
     $.post('/generateRandomMusic', {userInput: userInput, currentUUID: currentUUID, previousUUID: previousUUID}, function(data) {
         var input = JSON.parse(data);
@@ -41,17 +43,22 @@ $('#generate-button').one('click', function() {
         setNoteLength(input.note_length);
         setSpeed(input.playback_speed);
     }).then(function() {
+		updateBarImages();
+        fadeControlsIn();
+		generateRandomName();
 		playSongFromUrl();
 		setSongDuration();
         setupMidiJsTimeCounting();
-		generateRandomName();
-		updateBarImages();
     });
     $('#generate-button').prop('id', 'generate-button-clicked');
     return false;
 });
 
 $(document).on('click', '#generate-button-clicked', function() {
+	stopPlayback();
+    fadeControlsOut();
+    clearHighlightedBars();
+
 	userInput = $('#user-input').val();
 	blackWithWhite = $('#image-colour-toggle').is(':checked');
 	noteCertainty = (100 - $('#density-slider').val());
@@ -62,8 +69,6 @@ $(document).on('click', '#generate-button-clicked', function() {
 	randomiseOffScreenSliders = $('#randomise-off-screen-sliders').is(':checked');
 	pcaSliderComponents = getPcaSliderComponents();
 	updateUUIDs();
-
-	stopPlayback();
 
     $.post('/generateSpecifiedMusic', {
             userInput: userInput,
@@ -80,11 +85,12 @@ $(document).on('click', '#generate-button-clicked', function() {
             pcaSliderComponents: pcaSliderComponents}, function(data) {
         setSliderValues(data);
     }).then(function() {
+		updateBarImages();
+        fadeControlsIn();
+		generateRandomName();
 		playSongFromUrl();
 		setSongDuration();
         setupMidiJsTimeCounting();
-		generateRandomName();
-		updateBarImages();
     });
     return false;
 });
@@ -98,8 +104,8 @@ function getPcaSliderComponents() {
 
 function updateBarImages() {
 	d = new Date();
-	for(i = 1; i < 17; i++) {
-		$('#bar-' + i).prop('src', liveOutputDirectoryFilepath + (i-1) + '.png?' + d.getTime());
+	for (i = 1; i < 17; i++) {
+		$('#bar-' + i).prop('src', liveOutputDirectoryFilepath + (i - 1) + '.png?' + d.getTime());
 	}
 }
 
@@ -115,6 +121,7 @@ function stopPlayback() {
 	MIDIjs.stop();
 	playbackStopped = true;
     $('.play-pause-button').removeClass('playing');
+    clearHighlightedBars();
 	if (isSongFinished && loopSong) {
 		playSongFromUrl();
 	}
@@ -123,12 +130,13 @@ function stopPlayback() {
 function setupMidiJsTimeCounting() {
 	MIDIjs.player_callback = displayTime;
 	function displayTime(playerEvent) {
-		currentTime = Math.floor(playerEvent.time);
-		if (currentTime == totalTime && !isSongFinished) {
+		currentTime = playerEvent.time;
+		if (Math.floor(currentTime) == totalTime && !isSongFinished) {
 			currentTime = 0;
 			isSongFinished = true;
 		}
-		$('#current-time').text(convertSecondsToTime(currentTime));
+		updateHighlightedBar(currentTime, totalTime);
+		$('#current-time').text(convertSecondsToTime(Math.floor(currentTime)));
 		if (isSongFinished && !playbackStopped) {
 			stopPlayback();
 		}
@@ -196,31 +204,32 @@ $('.music-control-slider').click(function() {
 });
 
 // HELPER METHODS
-function convertSecondsToTime(currentTimeInSeconds) {
+function convertSecondsToTime(timeInSeconds) {
 	var timeToDisplay = '';
-	var hours = Math.floor(currentTimeInSeconds / 3600);
+	var hours = Math.floor(timeInSeconds / 3600);
 	if (hours > 0) {
 		timeToDisplay = hours + ':';
 	}
-    currentTimeInSeconds -= hours * 3600;
-    var minutes = Math.floor(currentTimeInSeconds / 60);
-    currentTimeInSeconds -= minutes * 60;
-    return timeToDisplay + (minutes < 10 ? '0' + minutes : minutes) + ':' + (currentTimeInSeconds < 10 ? '0' + currentTimeInSeconds : currentTimeInSeconds);
+    timeInSeconds -= hours * 3600;
+    var minutes = Math.floor(timeInSeconds / 60);
+    timeInSeconds -= minutes * 60;
+    return timeToDisplay + (minutes < 10 ? '0' + minutes : minutes) + ':' + (timeInSeconds < 10 ? '0' + timeInSeconds : timeInSeconds);
 }
 
 function generateUUID() { // Public Domain/MIT
-    var d = new Date().getTime(); //Timestamp
-    var d2 = (performance && performance.now && (performance.now()*1000)) || 0; //Time in microseconds since page-load or 0 if unsupported
+    var timestamp = new Date().getTime(); // Timestamp
+    var performanceStamp = (performance && performance.now && (performance.now() * 1000)) || 0; // Time in microseconds since page-load or 0 if unsupported
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16; //random number between 0 and 16
-        if(d > 0){ //Use timestamp until depleted
-            r = (d + r)%16 | 0;
-            d = Math.floor(d/16);
-        } else { //Use microseconds since page-load if supported
-            r = (d2 + r)%16 | 0;
-            d2 = Math.floor(d2/16);
+        var randomNumber = Math.random() * 16; // random number between 0 and 16
+        if (timestamp > 0) { // Use timestamp until depleted
+            randomNumber = (timestamp + randomNumber) % 16 | 0;
+            timestamp = Math.floor(timestamp / 16);
+        } else { // Use microseconds since page-load if supported
+            randomNumber = (performanceStamp + randomNumber) % 16 | 0;
+            performanceStamp = Math.floor(performanceStamp / 16);
         }
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        var UUID = (c === 'x' ? randomNumber : (randomNumber & 0x3 | 0x8)).toString(16);
+        return UUID;
     });
 }
 
@@ -240,4 +249,19 @@ function generateRandomName() {
     $('#song-exclamation').text(exclamation);
 }
 
-module.exports = functions;
+function updateHighlightedBar(currentTime, totalTime) {
+	var currentSongProgress = currentTime / totalTime;
+	var numBars = 16;
+	var currentBar = Math.floor(numBars * currentSongProgress) + 1;
+
+	clearHighlightedBars();
+	if (!$('#bar-' + currentBar).hasClass('highlighted-bar')) {
+		$('#bar-' + currentBar).addClass('highlighted-bar');
+	}
+}
+
+function clearHighlightedBars() {
+	for (i = 1; i <= 16; i++) {
+		$('#bar-' + (i)).removeClass('highlighted-bar');
+	}
+}
