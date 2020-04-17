@@ -1,52 +1,59 @@
 import unittest
 from input_validator import InputValidator
 
-input_validator = InputValidator()
-
 
 class InputValidatorTest(unittest.TestCase):
 
     def test_black_with_white_empty_string_validation(self):
+        input_validator = InputValidator()
         black_with_white = ''
         result = input_validator.validate_black_with_white(black_with_white)
         self.assertFalse(result)
 
     def test_black_with_white_true_string_validation(self):
+        input_validator = InputValidator()
         black_with_white = 'true'
         result = input_validator.validate_black_with_white(black_with_white)
         self.assertTrue(result)
 
     def test_black_with_white_True_string_validation(self):
+        input_validator = InputValidator()
         black_with_white = 'True'
         result = input_validator.validate_black_with_white(black_with_white)
         self.assertTrue(result)
 
     def test_black_with_white_notvalid_string_validation(self):
+        input_validator = InputValidator()
         black_with_white = 'notValid'
         result = input_validator.validate_black_with_white(black_with_white)
         self.assertTrue(result)
 
     def test_black_with_white_number_validation(self):
+        input_validator = InputValidator()
         black_with_white = 123
         result = input_validator.validate_black_with_white(black_with_white)
         self.assertTrue(result)
 
     def test_instrument_number_empty_string_validation(self):
+        input_validator = InputValidator()
         instrument_number = ''
         result = input_validator.validate_instrument_number(instrument_number)
         self.assertFalse(result)
 
     def test_instrument_number_negative_int_validation(self):
+        input_validator = InputValidator()
         instrument_number = -1
         result = input_validator.validate_instrument_number(instrument_number)
         self.assertFalse(result)
 
     def test_instrument_number_large_int_validation(self):
+        input_validator = InputValidator()
         instrument_number = 3000
         result = input_validator.validate_instrument_number(instrument_number)
         self.assertFalse(result)
 
     def test_instrument_number_notvalid_string_validation(self):
+        input_validator = InputValidator()
         instrument_number = 'notValid'
         with self.assertRaises(ValueError) as cm:
             input_validator.validate_instrument_number(instrument_number)
@@ -205,3 +212,7 @@ class InputValidatorTest(unittest.TestCase):
         randomise_off_screen_sliders = 123
         result = input_validator.validate_randomise_off_screen_sliders(randomise_off_screen_sliders)
         self.assertTrue(result)
+
+
+if __name__ == '__main__':
+    unittest.main()
