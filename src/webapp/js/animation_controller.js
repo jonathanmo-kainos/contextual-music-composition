@@ -2,7 +2,7 @@
 function fadeControlsIn() {
 	var homeToMain = new TimelineMax({});
 
-	$('.wrapper').removeClass('translucent')
+	$('.wrapper').removeClass('translucent');
 	$('#spinner').addClass('invisible');
 	$(":input").attr("disabled", false);
 
