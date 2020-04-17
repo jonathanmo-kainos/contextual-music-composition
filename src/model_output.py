@@ -73,4 +73,5 @@ def get_sample_type(user_input_text):
 
 
 def delete_old_song_directory(previous_uuid):
-    shutil.rmtree(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + previous_uuid)
+    if previous_uuid:
+        shutil.rmtree(enums.EnvVars.LIVE_SONG_OUTPUT_DIRECTORY_FILEPATH + previous_uuid)
